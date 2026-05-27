@@ -3,7 +3,7 @@ name: Deploy Angular to EC2
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -43,4 +43,3 @@ jobs:
           script: |
             sudo systemctl reload nginx
             echo "✅ Angular deployed successfully"
-            
