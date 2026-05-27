@@ -11,6 +11,7 @@ import {
 } from '../models/message';
 import { Client, IMessage, StompSubscription } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { environment } from '../../../../environment/environment.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,11 @@ export class MessagingService {
   isLoading = this.loadingSignal.asReadonly();
   error = this.errorSignal.asReadonly();
   status = this.connectionStatus.asReadonly();
+  private baseUrl = '';
+
+  ngOnInit() {
+    this.baseUrl = environment.apiUrl; // Ensure base URL is set for SockJS
+  }
 
   private begin() {
     this.loadingSignal.set(true);
@@ -80,7 +86,7 @@ export class MessagingService {
 
       return new Promise((resolve, reject) => {
         this.stompClient = new Client({
-          webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
+          webSocketFactory: () => new SockJS(`${this.baseUrl}/ws`),
           connectHeaders: {
             Authorization: `Bearer ${token}`,
             userCode: userCode,

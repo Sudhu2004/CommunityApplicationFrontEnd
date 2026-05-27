@@ -5,12 +5,13 @@ import { Api } from './api';
 import { Auth } from './auth';
 import { of } from 'rxjs';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { environment } from '../../../environment/environment.prod';
 
 describe('UserService', () => {
   let service: UserService;
   let httpMock: HttpTestingController;
   let authMock: any;
-  const baseUrl = 'http://localhost:8080';
+  const baseUrl = environment.apiUrl; // Ensure base URL is consistent with Api service
 
   beforeEach(() => {
     authMock = {
