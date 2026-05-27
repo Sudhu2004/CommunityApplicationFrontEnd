@@ -43,3 +43,4 @@ jobs:
           script: |
             sudo systemctl reload nginx
             echo "✅ Angular deployed successfully"
+
