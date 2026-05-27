@@ -1,0 +1,121 @@
+<!-- Backdrop -->
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="title-group">
+        <h2 class="modal-title">Community Network</h2>
+        <p class="modal-subtitle">{{ (members().length + requests().length + invitations().length) }} Connections</p>
+      </div>
+      <button class="btn-close" (click)="close()">✕</button>
+    </div>
+
+    <!-- Header Actions (Search & Filters) -->
+    <div class="modal-sub-header">
+      <div class="search-v3 mb-4">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          placeholder="Search people..." 
+          [value]="searchTerm()"
+          (input)="onSearch($any($event.target).value)"
+          autocomplete="off">
+      </div>
+
+      @if (canManage()) {
+        <div class="filter-pills">
+          <button class="pill" [class.active]="viewMode() === 'members'" (click)="setViewMode('members')">
+            Active <span>{{ members().length }}</span>
+          </button>
+          <button class="pill" [class.active]="viewMode() === 'requests'" (click)="setViewMode('requests')">
+            Requests 
+            @if (requests().length > 0) {
+              <span class="count-badge">{{ requests().length }}</span>
+            }
+          </button>
+          <button class="pill" [class.active]="viewMode() === 'invitations'" (click)="setViewMode('invitations')">
+            Invited
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <div class="people-grid">
+        @for (item of (viewMode() === 'members' ? filteredMembers() : 
+                     viewMode() === 'requests' ? filteredRequests() : 
+                     filteredInvitations()); track (item.user?.userCode || item.user?.email || $index)) {
+          
+          <div class="person-card animate-fadeIn" (click)="goToProfile(item.user.userCode)">
+            <div class="person-info">
+              <div class="avatar-v3" [class.is-invited]="viewMode() === 'invitations'">
+                @if (item.user?.profilePhotoUrl) {
+                  <img [src]="item.user.profilePhotoUrl" [alt]="item.user.name">
+                } @else {
+                  <span>{{ (item.user?.name || item.user?.email || 'U').charAt(0) }}</span>
+                }
+                @if (viewMode() === 'members') {
+                   <div class="status-dot" [attr.data-role]="item.role"></div>
+                }
+              </div>
+
+              <div class="details">
+                <div class="name-row">
+                  <span class="name">{{ item.user?.name || 'Anonymous' }}</span>
+                  @if (viewMode() === 'members') {
+                    <span class="role-tag" [attr.data-role]="item.role">{{ item.role }}</span>
+                  }
+                </div>
+                <span class="email">{{ item.user?.email }}</span>
+              </div>
+            </div>
+
+            <!-- Card Actions -->
+            <div class="card-actions" (click)="$event.stopPropagation()">
+              @if (viewMode() === 'members' && canManage() && item.user?.userCode !== currentUserId()) {
+                @if (currentUserRole() === 'OWNER') {
+                  @if (item.role === 'MEMBER') {
+                    <button class="btn-action promote" title="Promote" (click)="promote(item)">🛡️</button>
+                  } @else if (item.role === 'ADMIN') {
+                    <button class="btn-action demote" title="Demote" (click)="demote(item)">👤</button>
+                    <button class="btn-action transfer" title="Transfer" (click)="transferOwnership(item)">👑</button>
+                  }
+                }
+                @if (item.role !== 'OWNER') {
+                  <button class="btn-action remove" title="Remove" (click)="remove(item)">✕</button>
+                }
+              }
+
+              @if (viewMode() === 'requests') {
+                <button class="btn btn-primary btn-sm" (click)="approve(item)">Approve</button>
+                <button class="btn btn-outline btn-sm" (click)="reject(item)">Reject</button>
+              }
+
+              @if (viewMode() === 'invitations') {
+                <button class="btn btn-outline btn-sm" (click)="cancelInvite(item)">Cancel</button>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state py-20 text-center col-span-full">
+            <div class="text-6xl mb-4 opacity-20">
+              {{ viewMode() === 'members' ? '👥' : viewMode() === 'requests' ? '📩' : '✉️' }}
+            </div>
+            <h3 class="text-xl font-bold">No connections found</h3>
+            <p class="text-muted font-medium">Try a different search term or filter.</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-outline w-full" (click)="close()">
+        Done
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="chat-thread-wrapper">
+  <!-- Messages Area -->
+  <div class="messages-viewport" #scrollMe>
+    @if (isLoading()) {
+      <div class="chat-loading">
+        <div class="spinner"></div>
+      </div>
+    }
+
+    <div class="messages-list">
+      @for (message of messages(); track message.id) {
+        <app-message-bubble 
+          [message]="message" 
+          [isOwn]="message.userCode === currentUserCode()">
+        </app-message-bubble>
+      }
+
+      @if (!isLoading() && messages().length === 0) {
+        <div class="empty-chat-state">
+          <div class="icon">💬</div>
+          <p>No messages yet. Start the conversation!</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="chat-input-container">
+    @if (canChat) {
+      <app-message-input (send)="onSendMessage($event)"></app-message-input>
+    } @else {
+      <div class="chat-restricted-notice">
+        🔒 Only administrators can post messages in this space.
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<!-- Backdrop -->
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 class="modal-title">New Event</h2>
+      <button class="btn-close" (click)="close()" [disabled]="isSubmitting()">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      @if (error()) {
+        <div class="form-error-banner">
+          <span>⚠️ {{ error() }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label class="form-label" for="event-title">Event Title <span class="required">*</span></label>
+        <input
+          id="event-title"
+          type="text"
+          class="form-input"
+          placeholder="e.g. Weekly Sync"
+          [(ngModel)]="title"
+          name="title"
+          required
+          minlength="2"
+          maxlength="255"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-row flex gap-4">
+        <div class="form-group flex-1">
+          <label class="form-label" for="event-date">Date <span class="required">*</span></label>
+          <input
+            id="event-date"
+            type="date"
+            class="form-input"
+            [(ngModel)]="eventDate"
+            name="eventDate"
+            required
+          >
+        </div>
+        <div class="form-group flex-1">
+          <label class="form-label" for="event-location">Location</label>
+          <input
+            id="event-location"
+            type="text"
+            class="form-input"
+            placeholder="e.g. Zoom or Room 101"
+            [(ngModel)]="location"
+            name="location"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="event-desc">Description</label>
+        <textarea
+          id="event-desc"
+          class="form-input form-textarea"
+          placeholder="What's the plan?"
+          [(ngModel)]="description"
+          name="description"
+          maxlength="2000"
+          rows="3">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <div class="checkbox-v3">
+            <input type="checkbox" [(ngModel)]="attendanceEnabled" name="attendanceEnabled">
+            <span class="checkmark"></span>
+          </div>
+          <span class="form-label mb-0">Track Attendance</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="close()" [disabled]="isSubmitting()">
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="submit()"
+        [disabled]="!isValid || isSubmitting()">
+        @if (isSubmitting()) {
+          <span class="spinner"></span> Creating…
+        } @else {
+          Create Event
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

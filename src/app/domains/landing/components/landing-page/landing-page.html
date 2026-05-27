@@ -1,0 +1,104 @@
+<div class="landing-container">
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="nav-content">
+      <div class="brand">
+        <div class="logo-icon">T</div>
+        <span class="brand-name">Tribe</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it Works</a>
+      </nav>
+      <div class="nav-actions">
+        <a routerLink="/auth/login" class="btn btn-ghost">Log in</a>
+        <a routerLink="/auth/register" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content animate-slideUp">
+      <div class="badge badge-primary mb-4" style="margin-bottom: var(--space-4)">✨ The new way to connect</div>
+      <h1 class="hero-title">Build communities.<br>Organize your groups.<br>Host events.</h1>
+      <p class="hero-subtitle">
+        Tribe is the ultimate platform for bringing people together.
+        Whether you're running a club, organizing a meetup, or building a global network, we provide the tools you need.
+      </p>
+      <div class="hero-actions">
+        <a routerLink="/auth/register" class="btn btn-primary btn-lg">Start your community</a>
+        <a href="#features" class="btn btn-outline btn-lg">Learn more</a>
+      </div>
+    </div>
+
+    <!-- Hero Illustration (CSS shapes) -->
+    <div class="hero-illustration animate-fadeIn">
+      <div class="orb orb-1 animate-float"></div>
+      <div class="orb orb-2 animate-float" style="animation-delay: 1s"></div>
+      <div class="hero-card card-1 animate-float" style="animation-delay: 0.5s">
+        <div class="avatar avatar-md mb-2">👤</div>
+        <div class="h-line w-full mb-1"></div>
+        <div class="h-line w-2/3"></div>
+      </div>
+      <div class="hero-card card-2 animate-float" style="animation-delay: 1.5s">
+        <div class="badge badge-accent mb-2">New Event</div>
+        <div class="h-line w-full mb-1"></div>
+        <div class="h-line w-1/2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="section-header text-center mb-8" style="margin-bottom: var(--space-10)">
+      <h2>Everything you need to grow</h2>
+      <p class="text-secondary">Powerful tools designed for community leaders and members alike.</p>
+    </div>
+
+    <div class="grid-3 container">
+      <!-- Feature 1 -->
+      <div class="card feature-card text-center">
+        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">👥</div>
+        <h3>Communities & Groups</h3>
+        <p class="text-secondary">Create a main community and organize smaller subgroups within it. Manage roles and
+          permissions effortlessly.</p>
+      </div>
+      <!-- Feature 2 -->
+      <div class="card feature-card text-center">
+        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">📅</div>
+        <h3>Event Management</h3>
+        <p class="text-secondary">Schedule virtual or in-person events. Track RSVPs, send reminders, and share event
+          details seamlessly.</p>
+      </div>
+      <!-- Feature 3 -->
+      <div class="card feature-card text-center">
+        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">💬</div>
+        <h3>Real-time Messaging</h3>
+        <p class="text-secondary">Keep the conversation going before, during, and after events with dedicated event chat
+          channels.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content container text-center">
+      <h2>Ready to build your Tribe?</h2>
+      <p>Join thousands of community leaders who are bringing people together.</p>
+      <a routerLink="/auth/register" class="btn btn-accent btn-lg mt-6" style="margin-top: var(--space-6)">Create your
+        account</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container flex justify-between items-center">
+      <div class="brand">
+        <div class="logo-icon small">T</div>
+        <span class="brand-name">Tribe</span>
+      </div>
+      <p class="text-secondary text-sm">&copy; {{ currentYear }} Tribe Community Platform. All rights reserved.</p>
+    </div>
+  </footer>
+</div>

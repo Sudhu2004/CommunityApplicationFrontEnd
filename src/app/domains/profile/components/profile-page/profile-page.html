@@ -1,0 +1,132 @@
+<div class="detail-container animate-fadeIn">
+  @if (profile(); as p) {
+    <div class="two-column-layout">
+      
+      <!-- LEFT COLUMN: Profile Sidebar (Sticky) -->
+      <aside class="left-sidebar">
+        <div class="sticky-top">
+          <div class="profile-sidebar-card card shadow-sm">
+            <!-- Banner for visual similarity with Community/Group -->
+            <div class="profile-banner"></div>
+
+            <div class="p-8 pt-0">
+              <div class="profile-photo-wrapper">
+                <div class="profile-photo">
+                  @if (p.profilePhotoUrl) {
+                    <img [src]="p.profilePhotoUrl" [alt]="p.name">
+                  } @else {
+                    {{ p.name.charAt(0) }}
+                  }
+                </div>
+              </div>
+
+              <h1 class="profile-name text-2xl font-black text-center mb-2">{{ p.name }}</h1>
+              <p class="profile-email text-muted text-xs text-center mb-6 font-bold">{{ p.email }}</p>
+
+              <div class="profile-bio mb-8">
+                <h3 class="text-[10px] font-black text-muted uppercase tracking-widest mb-3 text-center">About</h3>
+                <p class="text-secondary text-sm leading-relaxed text-center">
+                  {{ p.name }} is a dedicated member of the Tribe community. 
+                  Actively participating in various discussions and events.
+                </p>
+              </div>
+
+              <div class="stats-grid-v3 border-t border-b py-6 mb-8">
+                <div class="stat-item-v3">
+                  <span class="stat-label">Communities</span>
+                  <span class="stat-value">{{ p.communityCount }}</span>
+                </div>
+                <div class="stat-item-v3">
+                  <span class="stat-label">Events</span>
+                  <span class="stat-value">{{ eventCount() }}</span>
+                </div>
+              </div>
+
+              <div class="action-buttons-v3">
+                @if (isOwnProfile) {
+                  <button class="btn btn-outline w-full shadow-sm font-bold">Edit Profile</button>
+                } @else {
+                  <button class="btn btn-primary w-full shadow-primary font-bold">Send Message</button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Activity & Communities -->
+      <main class="right-content">
+        <!-- Section: Communities -->
+        <section class="section-container-v3 mb-10">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black border-l-4 border-primary-color pl-4 uppercase tracking-tight">Joined Communities</h2>
+            <span class="text-[10px] font-black text-muted uppercase bg-muted/20 px-3 py-1 rounded-full">{{ userCommunities().length }} Communities</span>
+          </div>
+          <div class="grid-v3">
+            @for (c of userCommunities(); track c.communityCode) {
+              <app-community-card [community]="c"></app-community-card>
+            } @empty {
+              <div class="empty-state p-12 card text-center border-dashed bg-muted/5">
+                <p class="text-muted italic">Not part of any communities yet.</p>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Section: Recent Events -->
+        <section class="section-container-v3 mb-10">
+          <h2 class="text-xl font-black mb-6 border-l-4 border-primary-color pl-4 uppercase tracking-tight">Recent Events</h2>
+          <div class="flex flex-col gap-4">
+            @for (event of recentEvents(); track event.title) {
+              <div class="event-mini-card card p-5 flex items-center justify-between hover-lift transition-all">
+                <div class="flex items-center gap-5">
+                  <div class="date-badge flex flex-col items-center justify-center bg-primary-color text-white rounded-2xl w-14 h-14 shadow-sm">
+                    <span class="text-[9px] font-black uppercase">{{ event.date | date:'MMM' }}</span>
+                    <span class="text-lg font-black">{{ event.date | date:'dd' }}</span>
+                  </div>
+                  <div>
+                    <h3 class="font-black text-base">{{ event.title }}</h3>
+                    <p class="text-xs text-muted font-bold uppercase tracking-tighter">{{ event.location }}</p>
+                  </div>
+                </div>
+                <button class="btn btn-outline btn-sm font-black text-[10px] uppercase">Details</button>
+              </div>
+            }
+          </div>
+        </section>
+
+        <!-- Section: Activity Feed (Own Profile Only) -->
+        @if (isOwnProfile) {
+          <section class="section-container-v3">
+            <h2 class="text-xl font-black mb-6 border-l-4 border-primary-color pl-4 uppercase tracking-tight">Your Activity</h2>
+            <div class="activity-feed card p-8 shadow-sm">
+              <div class="flex flex-col gap-8">
+                @for (act of activities(); track act.id) {
+                  <div class="activity-item-v3 flex gap-6">
+                    <div class="activity-marker">
+                      <div class="activity-circle"></div>
+                      <div class="activity-line"></div>
+                    </div>
+                    <div class="activity-info">
+                      <p class="text-sm font-bold text-secondary">{{ act.message }}</p>
+                      <time class="text-[9px] text-muted font-black mt-1 block uppercase tracking-widest">{{ act.createdAt | date:'medium' }}</time>
+                    </div>
+                  </div>
+                } @empty {
+                  <div class="text-center py-10">
+                    <p class="text-muted text-sm italic font-medium">No recent activity to display.</p>
+                  </div>
+                }
+              </div>
+            </div>
+          </section>
+        }
+      </main>
+
+    </div>
+  } @else {
+    <div class="flex items-center justify-center min-h-[500px]">
+      <div class="animate-pulse text-muted font-black uppercase tracking-widest">Loading Profile...</div>
+    </div>
+  }
+</div>

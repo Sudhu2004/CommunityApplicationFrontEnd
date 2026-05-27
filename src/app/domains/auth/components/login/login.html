@@ -1,0 +1,101 @@
+<div class="auth-layout">
+  <!-- Left Panel: Branding -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-content animate-fadeIn">
+      <div class="brand-logo mb-6" style="margin-bottom: var(--space-6)">
+        <div class="logo-icon">T</div>
+        <span class="brand-name text-inverse text-2xl font-bold">Tribe</span>
+      </div>
+      <h1 class="text-inverse text-4xl font-extrabold mb-4" style="margin-bottom: var(--space-4)">Welcome back.</h1>
+      <p class="text-inverse mb-8" style="opacity: 0.8; font-size: var(--text-lg)">Log in to connect with your
+        communities and groups.</p>
+
+      <!-- Floating Feature Pills -->
+      <div class="feature-pills">
+        <div class="pill animate-float"><span class="mr-2">🌍</span> Global Communities</div>
+        <div class="pill animate-float" style="animation-delay: 0.5s"><span class="mr-2">💬</span> Real-time Chat</div>
+        <div class="pill animate-float" style="animation-delay: 1s"><span class="mr-2">📅</span> Event Planning</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel: Form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-container animate-slideUp">
+      <div class="form-header mb-8" style="margin-bottom: var(--space-8)">
+        <h2 class="text-3xl font-bold mb-2">Sign in</h2>
+        <p class="text-secondary">Enter your details to access your account.</p>
+      </div>
+
+      @if (errorMessage()) {
+      <div class="alert alert-error mb-6" style="margin-bottom: var(--space-6)" role="alert" aria-live="polite">
+        <span class="alert-icon">⚠</span>
+        {{ errorMessage() }}
+      </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate class="flex-col gap-4">
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username" class="form-label">Email or Username</label>
+          <input id="username" type="text" class="form-input" formControlName="username" placeholder="john@example.com"
+            [class.error]="username?.invalid && username?.touched" />
+          @if (username?.invalid && username?.touched) {
+          <span class="form-error mt-1" style="margin-top: var(--space-1)">
+            @if (username?.errors?.['required']) { Required field }
+            @if (username?.errors?.['minlength']) { Minimum 3 characters }
+          </span>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="flex justify-between items-center mb-1">
+            <label for="password" class="form-label" style="margin: 0">Password</label>
+            <a href="#/forgot-password" class="text-sm text-primary-color">Forgot password?</a>
+          </div>
+          <div style="position: relative;">
+            <input id="password" [type]="showPassword() ? 'text' : 'password'" class="form-input"
+              formControlName="password" placeholder="••••••••" [class.error]="password?.invalid && password?.touched"
+              style="padding-right: 40px" />
+            <button type="button" class="btn-icon"
+              style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted);"
+              (click)="togglePasswordVisibility()">
+              {{ showPassword() ? '👁' : '👁‍🗨' }}
+            </button>
+          </div>
+          @if (password?.invalid && password?.touched) {
+          <span class="form-error mt-1" style="margin-top: var(--space-1)">
+            @if (password?.errors?.['required']) { Required field }
+            @if (password?.errors?.['minlength']) { Minimum 6 characters }
+          </span>
+          }
+        </div>
+
+        <!-- Remember Me (Placeholder) -->
+        <div class="flex items-center gap-2 mb-2" style="margin-bottom: var(--space-2)">
+          <input type="checkbox" id="remember" formControlName="rememberMe" style="width: auto; margin: 0">
+          <label for="remember" class="text-sm text-secondary" style="margin: 0">Remember me for 30 days</label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-full mt-4" style="margin-top: var(--space-4)"
+          [disabled]="loginForm.invalid || isLoading()">
+          @if (isLoading()) {
+          <span class="spinner mr-2" style="margin-right: var(--space-2)"></span> Signing in...
+          } @else {
+          Sign In
+          }
+        </button>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="text-center mt-8 pt-6 border-t"
+        style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-color)">
+        <p class="text-secondary text-sm">Don't have an account?
+          <a routerLink="/auth/register" class="font-semibold text-primary-color">Sign up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

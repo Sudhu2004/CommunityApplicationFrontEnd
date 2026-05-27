@@ -1,0 +1,13 @@
+<form (ngSubmit)="onSend()" class="flex items-center gap-2">
+  <input
+    type="text"
+    name="message"
+    [(ngModel)]="content"
+    class="input flex-grow rounded-full px-4 py-2"
+    placeholder="Type a message..."
+    autocomplete="off"
+  />
+  <button type="submit" class="btn btn-primary rounded-full p-2 h-10 w-10 flex items-center justify-center" [disabled]="!content.trim()">
+    <span class="text-xl">🚀</span>
+  </button>
+</form>

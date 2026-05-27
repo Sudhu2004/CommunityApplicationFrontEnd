@@ -1,0 +1,99 @@
+.auth-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+}
+
+/* Left Panel - Branding */
+.auth-brand-panel {
+  display: none;
+  flex: 1;
+  background: var(--gradient-hero);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .auth-brand-panel {
+    display: flex;
+    align-items: center;
+    padding: var(--space-16);
+  }
+}
+
+.auth-brand-content {
+  position: relative;
+  z-index: 10;
+  max-width: 480px;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  color: var(--color-primary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-xl);
+}
+
+.feature-pills {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.pill {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-full);
+  color: white;
+  font-weight: var(--weight-medium);
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+/* Right Panel - Form */
+.auth-form-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+.auth-form-container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  padding: var(--space-8);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-color);
+}
+
+@media (min-width: 1024px) {
+  .auth-form-container {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}

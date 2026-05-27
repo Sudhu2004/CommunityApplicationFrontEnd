@@ -1,0 +1,20 @@
+<div class="card event-card flex flex-col hover:border-primary transition-colors cursor-pointer"
+     [routerLink]="['/app/events', event.eventCode]">
+  <div class="event-date-tag mb-3">
+    <span class="text-xs font-bold text-primary">{{ event.eventDate | date:'EEE, MMM d' }}</span>
+  </div>
+
+  <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{{ event.title }}</h3>
+  <p class="text-secondary text-sm line-clamp-2 mb-4 flex-grow">
+    {{ event.description || 'No description provided.' }}
+  </p>
+
+  <div class="flex items-center justify-between mt-auto pt-4 border-t border-muted">
+    <div class="flex items-center gap-2 text-xs text-muted">
+      <span>📍 {{ event.location || 'Online' }}</span>
+      <span>•</span>
+      <span>💬 {{ event.messageCount }}</span>
+    </div>
+    <span class="badge badge-success text-xs" *ngIf="event.attendanceEnabled">{{ event.attendanceCount }} going</span>
+  </div>
+</div>

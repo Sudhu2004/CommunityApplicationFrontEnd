@@ -1,0 +1,81 @@
+  <aside class="sidebar" [class.collapsed]="collapsed()">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="logo-icon">T</div>
+      @if (!collapsed()) {
+      <span class="brand-name">Tribe</span>
+      }
+    </div>
+
+    <div class="sidebar-scrollable">
+      <!-- Main Navigation -->
+      <nav class="nav-section">
+        @if (!collapsed()) {
+        <div class="nav-label">Main</div>
+        }
+        <a routerLink="/app/communities" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+          <span class="nav-icon">🌍</span>
+          @if (!collapsed()) {
+          <span class="nav-text">Explore</span>
+          }
+        </a>
+      </nav>
+
+      <!-- My Communities -->
+      @if (myCommunities().length > 0) {
+        <nav class="nav-section mt-4">
+          @if (!collapsed()) {
+          <div class="nav-label">My Communities</div>
+          }
+          @for (c of myCommunities(); track c.communityCode) {
+            <a [routerLink]="['/app/communities', c.communityCode]" routerLinkActive="active" class="nav-item" [title]="c.name">
+              <div class="avatar avatar-xs" style="background: var(--gradient-primary)">
+                {{ c.name.charAt(0) }}
+              </div>
+              @if (!collapsed()) {
+              <span class="nav-text truncate">{{ c.name }}</span>
+              }
+            </a>
+          }
+        </nav>
+      }
+
+      <div class="sidebar-spacer"></div>
+
+      <!-- Bottom Actions -->
+      <div class="sidebar-bottom">
+        <button class="nav-item w-full" (click)="toggleTheme()">
+          <span class="nav-icon">{{ isDarkMode() ? '☀️' : '🌙' }}</span>
+          @if (!collapsed()) {
+          <span class="nav-text">{{ isDarkMode() ? 'Light Mode' : 'Dark Mode' }}</span>
+          }
+        </button>
+
+        <button class="nav-item w-full" (click)="logout()">
+          <span class="nav-icon text-error">🚪</span>
+          @if (!collapsed()) {
+          <span class="nav-text text-error">Logout</span>
+          }
+        </button>
+
+        <!-- User Profile summary -->
+        @if (!collapsed()) {
+        <div class="user-profile-section">
+          <a [routerLink]="['/app/user', userCode()]" class="user-card">
+            <div class="user-avatar-v2">
+               @if (currentUserData()?.profilePhotoUrl) {
+                 <img [src]="currentUserData()?.profilePhotoUrl" [alt]="currentUserData()?.name">
+               } @else {
+                 <span>{{ (currentUserData()?.name || 'U').charAt(0) }}</span>
+               }
+            </div>
+            <div class="user-details-v2">
+              <span class="user-name-v2">{{ currentUserData()?.name || 'User' }}</span>
+              <span class="user-email-v2">{{ currentUserData()?.email }}</span>
+            </div>
+          </a>
+        </div>
+        }
+      </div>
+    </div>
+  </aside>

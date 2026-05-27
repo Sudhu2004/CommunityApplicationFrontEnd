@@ -1,0 +1,43 @@
+<div class="community-card-v2 animate-fadeIn" [routerLink]="['/app/communities', community.communityCode]">
+  <div class="card-banner" [style.background]="'var(--gradient-hero)'">
+    <div class="banner-overlay"></div>
+  </div>
+
+  <div class="card-body">
+    <div class="avatar-wrapper">
+      <div class="community-avatar-v2 shadow-md">
+        {{ community.name.charAt(0) }}
+      </div>
+    </div>
+
+    <div class="card-main-content">
+      <div class="flex justify-between items-start">
+        <h3 class="community-name-v2" [title]="community.name">{{ community.name }}</h3>
+        <div class="creator-tag">
+          by {{ community.createdBy.name || community.createdBy.email.split('@')[0] }}
+        </div>
+      </div>
+
+      <p class="community-desc-v2">
+        {{ community.description || 'Join this community to start collaborating and sharing ideas with others.' }}
+      </p>
+
+      <div class="card-footer-v2">
+        <div class="stats-v2">
+          <div class="stat-item" title="Members">
+            <span class="stat-icon">👥</span>
+            <span class="stat-value">{{ community.memberCount | number }}</span>
+          </div>
+          <div class="stat-item" title="Groups">
+            <span class="stat-icon">📁</span>
+            <span class="stat-value">{{ community.groupCount }}</span>
+          </div>
+        </div>
+
+        <button class="btn-join-v2" (click)="onJoin($event)">
+          Join <span class="ml-1">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

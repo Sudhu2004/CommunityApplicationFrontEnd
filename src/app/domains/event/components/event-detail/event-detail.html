@@ -1,0 +1,237 @@
+<div class="detail-container animate-fadeIn">
+  <!-- Loading & Error States -->
+  @if (isLoading()) {
+    <div class="skeleton-detail card h-[600px]"></div>
+  }
+  @if (error() && !isLoading()) {
+    <div class="error-view card shadow-lg">
+      <div class="error-icon">🚫</div>
+      <h3 class="error-title">Oops! We hit a snag</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button class="btn btn-primary mt-6 px-8" (click)="loadEvent(eventCode()!)">Try Again</button>
+    </div>
+  }
+
+  @if (event(); as e) {
+    @if (canViewContent()) {
+      <div class="two-column-layout">
+        
+        <!-- LEFT COLUMN: Event Details (Sticky) -->
+        <aside class="left-sidebar">
+          <div class="sticky-top">
+            <div class="event-card-main card shadow-sm">
+              <!-- Event Banner / Top section -->
+              <div class="profile-banner"></div>
+
+              <div class="p-8 pt-6">
+                <div class="flex items-center gap-3 mb-4">
+                  <span class="badge badge-primary uppercase tracking-widest text-[9px] font-black">Event</span>
+                  <span class="text-muted text-[10px] font-black uppercase">{{ e.eventDate | date:'fullDate' }}</span>
+                </div>
+                
+                <h1 class="event-title-v3 mb-4 font-black">{{ e.title }}</h1>
+                
+                <div class="event-description-v3 text-secondary text-sm leading-relaxed mb-8">
+                  {{ e.description || 'No additional details provided for this event.' }}
+                </div>
+
+                <div class="event-meta-list-v3 border-t border-b py-6 mb-8">
+                  <div class="meta-row-v3">
+                    <span class="meta-label">Time</span>
+                    <span class="meta-value font-black">{{ e.eventDate | date:'shortTime' }}</span>
+                  </div>
+                  <div class="meta-row-v3">
+                    <span class="meta-label">Location</span>
+                    <span class="meta-value text-right font-black">{{ e.location || 'Online / TBD' }}</span>
+                  </div>
+                  <div class="meta-row-v3 clickable" (click)="openAttendanceModal(false)">
+                    <span class="meta-label">Attendance</span>
+                    <span class="meta-value text-primary-color font-black">
+                      {{ stats()?.presentCount || 0 }}/{{ (stats()?.presentCount || 0) + (stats()?.absentCount || 0) + (stats()?.pendingCount || 0) }}
+                    </span>
+                  </div>
+                  <div class="meta-row-v3">
+                    <span class="meta-label">Your Status</span>
+                    <span class="meta-value font-black uppercase text-[10px]" [class.text-success]="myAttendance()?.status === 'PRESENT'" 
+                                           [class.text-danger]="myAttendance()?.status === 'ABSENT'">
+                      {{ myAttendance()?.status || 'Not Marked' }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="action-buttons-v3">
+                  @if (isOwnerOrAdmin) {
+                    <button class="btn btn-primary btn-lg w-full shadow-primary mb-4 font-black uppercase text-xs" (click)="openAttendanceModal(true)">
+                      Take Attendance
+                    </button>
+                  }
+                  
+                  @if (!myAttendance()) {
+                    <div class="rsvp-box p-4 bg-muted/20 rounded-2xl border border-dashed text-center">
+                      <span class="text-[10px] font-black text-muted block mb-3 uppercase tracking-widest">Are you attending?</span>
+                      <div class="flex gap-2">
+                        <button class="btn btn-success grow btn-sm font-black text-[10px] uppercase" (click)="markMyAttendance('PRESENT')">Yes</button>
+                        <button class="btn btn-outline grow btn-sm font-black text-[10px] uppercase" (click)="markMyAttendance('ABSENT')">No</button>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT COLUMN: Tabbed Content -->
+        <main class="right-content">
+          <nav class="tabs-nav-v3 card shadow-sm mb-4">
+            <button class="tab-item-v3" [class.active]="activeTab === 'chat'" (click)="setTab('chat')">
+              Chat
+            </button>
+            <button class="tab-item-v3" [class.active]="activeTab === 'media'" (click)="setTab('media')">
+              Media
+            </button>
+            <button class="tab-item-v3" [class.active]="activeTab === 'links'" (click)="setTab('links')">
+              Links
+            </button>
+          </nav>
+
+          <div class="tab-content-v3">
+            <!-- Chat Tab -->
+            @if (activeTab === 'chat') {
+              <div class="chat-wrapper-v3 card shadow-sm animate-fadeIn">
+                <div class="chat-header-v3 p-4 border-b bg-muted/5">
+                  <h3 class="font-black text-xs uppercase tracking-widest text-muted">Event Discussion</h3>
+                </div>
+                <div class="chat-body-v3">
+                  <app-message-thread 
+                    [eventCode]="e.eventCode" 
+                    [canChat]="true">
+                  </app-message-thread>
+                </div>
+              </div>
+            }
+
+            <!-- Media Tab -->
+            @if (activeTab === 'media') {
+              <div class="section-container animate-fadeIn">
+                <div class="view-header-reorg mb-6">
+                  <!-- Media Search Placeholder (if needed in future) -->
+                  <div class="search-top-middle">
+                     <div class="search-box-v3">
+                       <span class="icon">🔍</span>
+                       <input type="text" placeholder="Search media by date or name...">
+                     </div>
+                  </div>
+                  
+                  <div class="filters-and-actions mt-4">
+                    <div class="filter-bubbles-v3">
+                       <button class="bubble-v3 active">All Media</button>
+                       <button class="bubble-v3">Photos</button>
+                       <button class="bubble-v3">Videos</button>
+                    </div>
+                    <div class="sort-select">
+                      <select class="form-select-sm bg-muted/20 border-none rounded-lg font-black text-[10px] uppercase px-4 py-2">
+                        <option>Newest First</option>
+                        <option>Oldest First</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="media-grid-v3">
+                  @for (item of media(); track item.url) {
+                    <div class="media-card-v3 aspect-square rounded-2xl overflow-hidden hover-lift group relative cursor-pointer shadow-sm">
+                      @if (item.type === 'image') {
+                        <img [src]="item.url" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                      } @else {
+                        <video [src]="item.url" class="w-full h-full object-cover"></video>
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/10">
+                          <span class="text-4xl">▶️</span>
+                        </div>
+                      }
+                      <div class="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span class="text-[9px] text-white font-black uppercase tracking-tighter">{{ item.date | date:'mediumDate' }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Links Tab -->
+            @if (activeTab === 'links') {
+              <div class="section-container animate-fadeIn">
+                <div class="view-header-reorg mb-6">
+                  <div class="search-top-middle">
+                     <div class="search-box-v3">
+                       <span class="icon">🔍</span>
+                       <input type="text" placeholder="Search shared links...">
+                     </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                  @for (link of links(); track link.url) {
+                    <div class="link-card-v3 p-5 bg-card border rounded-2xl hover-lift transition-all flex items-center justify-between gap-6 group">
+                      <div class="overflow-hidden">
+                        <div class="link-url-v3 font-mono text-primary-color truncate text-sm mb-1 font-black">
+                          <a [href]="link.url" target="_blank" class="hover:underline">{{ link.url }}</a>
+                        </div>
+                        <div class="text-[9px] text-muted font-black uppercase tracking-widest">
+                          Shared by {{ link.sender }} • {{ link.date | date:'medium' }}
+                        </div>
+                      </div>
+                      <a [href]="link.url" target="_blank" class="btn btn-outline btn-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-black text-[9px] uppercase">Open Link</a>
+                    </div>
+                  } @empty {
+                    <div class="empty-placeholder py-20 text-center card bg-muted/5 border-dashed">
+                      <span class="text-5xl opacity-10 block mb-4">🔗</span>
+                      <p class="text-muted italic font-bold">No links have been shared yet.</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </main>
+
+      </div>
+    } @else {
+      <div class="locked-content card p-20 shadow-xl flex flex-col items-center justify-center text-center animate-fadeIn max-w-4xl mx-auto mt-10">
+        <div class="lock-icon-v3 mb-6">🔒</div>
+        <h2 class="text-2xl font-black mb-4 uppercase tracking-tighter">Event Locked</h2>
+        <p class="text-secondary max-w-md mb-8 leading-relaxed font-medium">
+          You must be an accepted member of the community (and group, if applicable) to view this event's details, participate in the discussion, and track attendance.
+        </p>
+        
+        @if (isPendingMember() || isPendingGroupMember()) {
+          <div class="bg-muted/10 px-8 py-3 rounded-2xl border border-muted/20">
+            <span class="text-sm font-black text-muted uppercase tracking-widest">Waiting for Approval...</span>
+          </div>
+        } @else {
+          <div class="flex gap-4">
+            <a [routerLink]="['/app/communities', e.communityCode]" class="btn btn-primary px-8 font-black uppercase text-xs">
+              Go to Community
+            </a>
+            @if (e.groupCode) {
+              <a [routerLink]="['/app/groups', e.groupCode]" class="btn btn-outline px-8 font-black uppercase text-xs">
+                Go to Group
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
+
+<!-- Attendance Modal -->
+@if (showAttendanceModal()) {
+  <app-attendance-modal
+    [attendance]="combinedAttendance"
+    [isManageMode]="attendanceManageMode()"
+    [eventTitle]="event()?.title || ''"
+    (markAttendance)="markUserAttendance($event.userCode, $event.status)"
+    (closed)="showAttendanceModal.set(false)">
+  </app-attendance-modal>
+}

@@ -1,0 +1,62 @@
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="title-group">
+        <h2>{{ isManageMode ? 'Take Attendance' : 'Attendance List' }}</h2>
+        <p>{{ eventTitle }}</p>
+      </div>
+      <button class="close-btn-v2" (click)="close()">✕</button>
+    </div>
+    
+    <div class="search-bar-v2">
+      <span class="icon">🔍</span>
+      <input 
+        type="text" 
+        placeholder="Search people..." 
+        [value]="searchTerm()"
+        (input)="onSearch($any($event.target).value)"
+        autocomplete="off">
+    </div>
+
+    <div class="modal-body">
+      <div class="attendance-list">
+        @for (record of filteredAttendance(); track record.user.userCode) {
+          <div class="attendance-row animate-fadeIn" [class.clickable]="isManageMode" (click)="toggleAttendance(record)">
+            <div class="user-info">
+              <div class="avatar">
+                @if (record.user.profilePhotoUrl) {
+                  <img [src]="record.user.profilePhotoUrl" [alt]="record.user.name">
+                } @else {
+                  {{ (record.user.name || record.user.email).charAt(0) }}
+                }
+              </div>
+              <div class="details">
+                <span class="name">{{ record.user.name || 'Anonymous' }}</span>
+                <span class="email">{{ record.user.email }}</span>
+              </div>
+            </div>
+
+            <div class="status-section">
+              @if (record.status === 'PRESENT') {
+                <span class="status-pill present">Present</span>
+              } @else if (record.status === 'ABSENT') {
+                <span class="status-pill absent">Absent</span>
+              } @else {
+                <span class="status-pill pending">No Record</span>
+              }
+              
+              @if (isManageMode) {
+                <div class="toggle-hint">Tap to Toggle</div>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <span>👥</span>
+            <p>No connections found</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

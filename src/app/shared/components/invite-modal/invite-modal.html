@@ -1,0 +1,80 @@
+<!-- Backdrop -->
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="title-group">
+        <h2 class="modal-title">{{ title }}</h2>
+        <p class="modal-subtitle">{{ description }}</p>
+      </div>
+      <button class="btn-close" (click)="close()">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      <div class="search-v3 mb-6">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          placeholder="Search by name or email..." 
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+          autocomplete="off">
+      </div>
+
+      @if (isLoading()) {
+        <div class="flex justify-center py-10">
+          <div class="animate-pulse text-[10px] font-black uppercase tracking-widest text-muted">Searching...</div>
+        </div>
+      } @else if (error()) {
+        <div class="form-error-banner mb-6">
+          <span>⚠️ {{ error() }}</span>
+        </div>
+      } @else {
+        <div class="member-list">
+          @for (user of users(); track user.userCode) {
+            <div class="member-row card animate-fadeIn">
+              <div class="user-info">
+                <div class="avatar-v3">
+                  @if (user.profilePhotoUrl) {
+                    <img [src]="user.profilePhotoUrl" [alt]="user.name">
+                  } @else {
+                    {{ (user.name || user.email).charAt(0) }}
+                  }
+                </div>
+                <div class="details">
+                  <div class="name">{{ user.name || 'Anonymous' }}</div>
+                  <div class="email">{{ user.email }}</div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" (click)="invite(user.userCode)">
+                Invite
+              </button>
+            </div>
+          } @empty {
+            @if (searchTerm.length >= 2) {
+              <div class="empty-state py-10 text-center">
+                <span class="text-4xl block mb-4">🔍</span>
+                <p class="text-muted font-bold">No users found matching your search.</p>
+              </div>
+            } @else {
+              <div class="empty-state py-10 text-center">
+                <span class="text-4xl block mb-4">👥</span>
+                <p class="text-muted font-bold">Type at least 2 characters to search.</p>
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-outline w-full" (click)="close()">
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>

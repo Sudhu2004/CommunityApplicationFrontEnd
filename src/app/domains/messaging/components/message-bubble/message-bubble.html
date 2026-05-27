@@ -1,0 +1,62 @@
+<div class="message-row w-full flex mb-4" 
+     [class.justify-center]="message.type === 'SYSTEM_ACTIVITY'"
+     [class.justify-end]="isOwn && message.type !== 'SYSTEM_ACTIVITY'"
+     [class.justify-start]="!isOwn && message.type !== 'SYSTEM_ACTIVITY'">
+
+  @if (message.type === 'SYSTEM_ACTIVITY') {
+    <div class="system-activity-bubble px-4 py-1 rounded-full bg-muted/50 border text-[11px] text-secondary font-medium uppercase tracking-wider">
+      {{ message.content }}
+    </div>
+  } @else {
+    <div class="bubble-wrapper flex items-start gap-3" 
+         [class.own-message]="isOwn" 
+         [class.flex-row-reverse]="isOwn">
+      
+      <div class="avatar avatar-sm shrink-0">
+        @if (message.senderProfilePhotoUrl) {
+          <img [src]="message.senderProfilePhotoUrl" [alt]="message.senderName">
+        } @else {
+          {{ message.senderName.charAt(0) || '?' }}
+        }
+      </div>
+
+      <div class="bubble-content flex flex-col" [class.items-end]="isOwn">
+        <div class="sender-name text-xs text-secondary mb-1 px-1">
+          {{ isOwn ? 'You' : message.senderName }}
+        </div>
+        
+        <div class="bubble p-3 rounded-2xl max-w-md shadow-sm" 
+             [class.bg-primary]="isOwn" 
+             [class.text-white]="isOwn"
+             [class.bg-muted]="!isOwn">
+          
+          <!-- Media Support -->
+          @if (message.mediaList && message.mediaList.length > 0) {
+            <div class="media-container grid gap-2 mb-2">
+              @for (media of message.mediaList; track media.id) {
+                @if (media.mediaType === 'IMAGE') {
+                  <img [src]="media.url" class="rounded-lg max-w-full h-auto cursor-pointer hover:opacity-90">
+                } @else if (media.mediaType === 'VIDEO') {
+                  <video [src]="media.url" controls class="rounded-lg max-w-full"></video>
+                } @else {
+                  <a [href]="media.url" target="_blank" class="flex items-center gap-2 p-2 rounded bg-black/5 hover:bg-black/10 transition-colors">
+                    <span>📄</span>
+                    <span class="truncate text-xs">File {{ $index + 1 }}</span>
+                  </a>
+                }
+              }
+            </div>
+          }
+
+          @if (message.content) {
+            <p class="whitespace-pre-wrap break-words text-sm">{{ message.content }}</p>
+          }
+        </div>
+
+        <div class="message-meta text-[10px] text-muted mt-1 px-1">
+          {{ message.createdAt | date:'shortTime' }}
+        </div>
+      </div>
+    </div>
+  }
+</div>

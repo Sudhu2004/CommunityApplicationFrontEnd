@@ -1,0 +1,43 @@
+<div class="group-card" [routerLink]="['/app/groups', group.groupCode]">
+  <div class="card-glow"></div>
+  
+  <div class="card-header">
+    <div class="avatar-container">
+      <div class="avatar avatar-lg group-avatar">
+        {{ group.name.charAt(0) }}
+      </div>
+      <div class="community-tag">
+        {{ group.communityName }}
+      </div>
+    </div>
+    
+    <div class="stats-badges">
+      <div class="stat-badge" title="Members">
+        <span class="stat-icon">👥</span>
+        <span class="stat-value">{{ group.memberCount }}</span>
+      </div>
+      <div class="stat-badge" title="Events">
+        <span class="stat-icon">📅</span>
+        <span class="stat-value">{{ group.eventCount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <h3 class="group-name">{{ group.name }}</h3>
+    <p class="group-description">
+      {{ group.description || 'No description provided.' }}
+    </p>
+  </div>
+
+  <div class="card-footer">
+    <div class="creator-info">
+      <span class="text-xs text-muted">Created by</span>
+      <span class="creator-name">{{ group.createdBy.name || group.createdBy.email }}</span>
+    </div>
+    <div class="view-action">
+      <span>View</span>
+      <span class="arrow">&rarr;</span>
+    </div>
+  </div>
+</div>

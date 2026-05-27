@@ -1,0 +1,61 @@
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn btn-icon" (click)="onToggle()">
+      ☰
+    </button>
+    
+    <!-- Dynamic Breadcrumb -->
+    <div class="breadcrumb text-sm text-secondary font-medium hidden sm:flex items-center">
+      @for (breadcrumb of breadcrumbs(); track breadcrumb.url; let last = $last) {
+        <a [routerLink]="breadcrumb.url" 
+           class="breadcrumb-link"
+           [class.text-primary-color]="!last"
+           [class.pointer-events-none]="last"
+           [class.text-muted]="last">
+          {{ breadcrumb.label }}
+        </a>
+        @if (!last) {
+          <span class="mx-2 text-muted opacity-50">→</span>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <!-- Notification Bell -->
+    <div class="relative">
+      <button class="btn-icon topbar-btn relative" (click)="toggleNotifications()">
+        🔔
+        @if (activities().length > 0) {
+          <span class="notification-badge"></span>
+        }
+      </button>
+
+      <!-- Notification Dropdown -->
+      @if (showNotifications()) {
+        <div class="notification-dropdown card shadow-xl animate-fadeIn">
+          <div class="dropdown-header">
+            <h3>Notifications</h3>
+            <span class="text-[10px] font-black uppercase text-muted">{{ activities().length }} New</span>
+          </div>
+          <div class="dropdown-body">
+            @for (activity of activities(); track activity.id) {
+              <div class="notification-item">
+                <div class="activity-icon">✨</div>
+                <div class="activity-content">
+                  <p class="activity-msg">{{ activity.message }}</p>
+                  <span class="activity-time">{{ activity.createdAt | date:'shortTime' }}</span>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-notifications">
+                <span class="text-2xl mb-2 block">📭</span>
+                <p>All caught up!</p>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</header>

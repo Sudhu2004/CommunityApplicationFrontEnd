@@ -1,0 +1,81 @@
+<div class="auth-layout">
+  <!-- Left Panel: Branding -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-content animate-fadeIn">
+      <div class="brand-logo mb-6" style="margin-bottom: var(--space-6)">
+        <div class="logo-icon">T</div>
+        <span class="brand-name text-inverse text-2xl font-bold">Tribe</span>
+      </div>
+      <h1 class="text-inverse text-4xl font-extrabold mb-4" style="margin-bottom: var(--space-4)">Almost there.</h1>
+      <p class="text-inverse mb-8" style="opacity: 0.8; font-size: var(--text-lg)">We've sent a 6-digit verification code to your email address.</p>
+      
+      <div class="feature-pills">
+        <div class="pill animate-float"><span class="mr-2">📧</span> Verification Needed</div>
+        <div class="pill animate-float" style="animation-delay: 0.5s"><span class="mr-2">⚡</span> Quick Activation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel: Form -->
+  <div class="auth-form-panel">
+    <div class="auth-form-container animate-slideUp">
+      <div class="form-header mb-8" style="margin-bottom: var(--space-8)">
+        <h2 class="text-3xl font-bold mb-2">Check your email</h2>
+        <p class="text-secondary">Enter the 6-digit code sent to <br><strong class="text-primary-color">{{ email() || 'your email' }}</strong></p>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error mb-6" style="margin-bottom: var(--space-6)">
+          <span class="alert-icon">⚠</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="alert alert-success mb-6" style="margin-bottom: var(--space-6)">
+          <span class="alert-icon">✓</span>
+          Account activated successfully! Redirecting...
+        </div>
+      }
+
+      <form [formGroup]="activationForm" (ngSubmit)="onSubmit()" novalidate class="flex-col gap-6">
+        <div class="form-group text-center">
+          <label for="code" class="form-label sr-only">Activation Code</label>
+          <input 
+            id="code" 
+            type="text" 
+            class="form-input text-center text-3xl font-mono tracking-widest py-4" 
+            style="padding: var(--space-4); letter-spacing: 0.4em; font-weight: 700; height: 64px;"
+            formControlName="code" 
+            placeholder="000000" 
+            maxlength="6"
+            (input)="onCodeInput($event)"
+            [class.error]="code?.invalid && code?.touched" 
+          />
+          @if (code?.invalid && code?.touched) {
+            <span class="form-error justify-center mt-2" style="margin-top: var(--space-2)">
+              @if (code?.errors?.['required']) { Please enter the code }
+              @if (code?.errors?.['pattern'] || code?.errors?.['minlength']) { Must be exactly 6 digits }
+            </span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full" [disabled]="activationForm.invalid || isLoading()()">
+          @if (isLoading()()) { 
+            <span class="spinner mr-2" style="margin-right: var(--space-2)"></span> Verifying... 
+          } @else { 
+            Verify Account 
+          }
+        </button>
+      </form>
+
+      <div class="text-center mt-8 pt-6 border-t" style="margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--border-color)">
+        <p class="text-secondary text-sm mb-3">Didn't receive the code?</p>
+        <button type="button" class="btn btn-secondary w-full mb-4" (click)="resendCode()" [disabled]="isResendDisabled">
+          {{ resendButtonText }}
+        </button>
+        <a routerLink="/auth/login" class="text-sm text-primary-color font-semibold">Back to Login</a>
+      </div>
+    </div>
+  </div>
+</div>

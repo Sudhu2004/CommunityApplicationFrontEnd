@@ -1,0 +1,101 @@
+<div class="page-container animate-fadeIn">
+  <div class="page-header-v2">
+    <div class="header-left">
+      <h1 class="page-title">Explore Communities</h1>
+      <p class="page-subtitle">Find your tribe and start collaborating.</p>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-primary btn-lg shadow-primary" (click)="showCreateModal.set(true)">
+        <span class="mr-2">✨</span> Create Community
+      </button>
+    </div>
+  </div>
+
+  <div class="controls-card">
+    <div class="tabs-v2">
+      <button class="tab-btn" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+        <span class="icon">🌍</span> All Communities
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'mine'" (click)="setTab('mine')">
+        <span class="icon">🏠</span> My Communities
+      </button>
+    </div>
+
+    <div class="search-v2">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        class="search-input-v2"
+        placeholder="Search by name or description..."
+        [value]="searchTerm"
+        (input)="onSearchInput($any($event.target).value)"
+      >
+      @if (searchTerm) {
+        <button class="clear-btn" (click)="onSearchInput('')">✕</button>
+      }
+    </div>
+  </div>
+
+  <!-- Error Banner -->
+  @if (error()) {
+    <div class="alert alert-error-v2 animate-shake">
+      <div class="flex items-center gap-3">
+        <span class="alert-icon">⚠️</span>
+        <span>{{ error() }}</span>
+      </div>
+      <button class="close-btn" (click)="error.set(null)">✕</button>
+    </div>
+  }
+
+  <!-- Content Area -->
+  <div class="content-area mt-8">
+    @if (isLoading()) {
+      <div class="grid-3">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="skeleton-card-v2">
+            <div class="skeleton-banner"></div>
+            <div class="skeleton-content">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-title"></div>
+              <div class="skeleton-text"></div>
+              <div class="skeleton-footer"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="grid-3">
+        @for (community of communities(); track community.communityCode) {
+          <app-community-card
+            [community]="community"
+            (join)="onJoinCommunity($event)">
+          </app-community-card>
+        }
+        @empty {
+          <div class="empty-state-v2">
+            <div class="empty-icon-wrapper">
+              <span class="empty-icon">📂</span>
+            </div>
+            <h3 class="empty-title">
+              {{ searchTerm ? 'No communities match your search' : 'No communities yet' }}
+            </h3>
+            <p class="empty-desc">
+              {{ searchTerm ? 'Try adjusting your search terms or filters.' : 'Why not start something new? Create the first community today!' }}
+            </p>
+            @if (!searchTerm) {
+              <button class="btn btn-primary mt-6" (click)="showCreateModal.set(true)">Get Started</button>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Create Community Modal -->
+@if (showCreateModal()) {
+  <app-create-community-modal
+    (created)="onCommunityCreated($event)"
+    (closed)="showCreateModal.set(false)">
+  </app-create-community-modal>
+}

@@ -1,0 +1,194 @@
+<div class="detail-container animate-fadeIn">
+
+  <!-- Loading & Error States -->
+  @if (isLoading()) {
+    <div class="skeleton-detail card h-[600px]"></div>
+  }
+  @if (error() && !isLoading()) {
+    <div class="error-view card shadow-lg">
+      <div class="error-icon">🚫</div>
+      <h3 class="error-title">Oops! We hit a snag</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button class="btn btn-primary mt-6 px-8" (click)="loadGroup(groupCode()!)">Try Again</button>
+    </div>
+  }
+
+  @if (group(); as g) {
+    <div class="two-column-layout">
+      
+      <!-- LEFT COLUMN: Group Details (Sticky) -->
+      <aside class="left-sidebar">
+        <div class="sticky-top">
+          <div class="group-card-main card shadow-sm">
+            <div class="profile-banner"></div>
+
+            <div class="p-8 pt-0">
+              <div class="profile-photo-wrapper">
+                <div class="profile-photo">
+                   {{ g.name.charAt(0) }}
+                </div>
+              </div>
+
+              <span class="text-[10px] font-black text-muted uppercase tracking-widest mb-1 block text-center">{{ g.communityName }}</span>
+              <h1 class="group-title-v3 text-center mb-2 font-black">{{ g.name }}</h1>
+              
+              <div class="role-badge-container mb-6 text-center">
+                @if (myRole) {
+                  <span class="role-badge" [attr.data-role]="myRole">{{ myRole }}</span>
+                }
+              </div>
+
+              <p class="group-description-v3 text-secondary text-sm leading-relaxed mb-6 text-center">
+                {{ g.description || 'No description provided.' }}
+              </p>
+              
+              <div class="stats-grid-v3 border-t border-b py-6 mb-6">
+                <div class="stat-item-v3 clickable" (click)="openMembersModal()">
+                  <span class="stat-label">Members</span>
+                  <span class="stat-value">{{ acceptedMemberCount() | number }}</span>
+                </div>
+                <div class="stat-item-v3">
+                  <span class="stat-label">Events</span>
+                  <span class="stat-value">{{ g.eventCount }}</span>
+                </div>
+              </div>
+
+              <div class="owner-box mb-8">
+                <span class="text-[10px] font-black text-muted uppercase tracking-widest block mb-3 text-center">Group Leader</span>
+                <a [routerLink]="['/app/user', g.createdBy.userCode]" 
+                   target="_blank" 
+                   class="owner-link-v3 justify-center">
+                  <div class="avatar avatar-xs">
+                    {{ (g.createdBy.name || 'L').charAt(0) }}
+                  </div>
+                  <span class="font-black text-sm">{{ g.createdBy.name || g.createdBy.email }}</span>
+                </a>
+              </div>
+
+              <div class="action-buttons-v3">
+                @if (!myMembership()) {
+                  <button class="btn btn-primary btn-lg w-full shadow-primary font-black uppercase text-xs" (click)="requestJoin()">
+                    Join Group
+                  </button>
+                } @else if (myMembership()?.status === 'PENDING_INVITATION') {
+                  <div class="flex flex-col gap-2">
+                    <button class="btn btn-success w-full font-black uppercase text-xs" (click)="acceptInvitation()">Accept Invite</button>
+                    <button class="btn btn-outline w-full font-black uppercase text-xs" (click)="leaveGroup()">Decline</button>
+                  </div>
+                } @else if (isPendingMember) {
+                  <button class="btn btn-muted w-full font-black uppercase text-xs" disabled>Request Pending</button>
+                } @else if (isAcceptedMember) {
+                  <button class="btn btn-outline w-full font-black uppercase text-xs" (click)="showInviteModal.set(true)">Add Members</button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Tabbed Sections -->
+      <main class="right-content">
+        @if (isAcceptedMember) {
+          <nav class="tabs-nav-v3 card shadow-sm mb-6">
+            <button class="tab-item-v3" [class.active]="activeTab === 'events'" (click)="setTab('events')">
+              Events
+            </button>
+          </nav>
+
+          <div class="tab-content-v3">
+            <!-- Events Tab -->
+            @if (activeTab === 'events') {
+              <div class="section-container animate-fadeIn">
+                <!-- Reorganized Inner Header -->
+                <div class="view-header-reorg mb-8">
+                  <div class="search-top-middle">
+                    <div class="search-box-v3">
+                      <span class="icon">🔍</span>
+                      <input type="text" placeholder="Search events..." [value]="eventSearch()" (input)="eventSearch.set($any($event.target).value)">
+                    </div>
+                  </div>
+
+                  <div class="filters-and-actions mt-6">
+                    <div class="filter-bubbles-v3">
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'ongoing'" (click)="eventFilter.set('ongoing')">Ongoing</button>
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'upcoming'" (click)="eventFilter.set('upcoming')">Upcoming</button>
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'past'" (click)="eventFilter.set('past')">Past</button>
+                    </div>
+                    @if (isOwnerOrAdmin) {
+                      <button class="btn btn-primary btn-sm font-black uppercase text-[10px]" (click)="showCreateEventModal.set(true)">+ New Event</button>
+                    }
+                  </div>
+                </div>
+
+                <div class="grid-v3">
+                  @for (event of filteredEvents(); track event.eventCode) {
+                    <app-event-card [event]="event"></app-event-card>
+                  } @empty {
+                    <div class="empty-placeholder card p-16 text-center col-span-full border-dashed bg-muted/5">
+                      <p class="text-muted italic font-bold">No {{ eventFilter() }} events for this group.</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="locked-content card p-20 shadow-xl flex flex-col items-center justify-center text-center animate-fadeIn">
+            <div class="lock-icon-v3 mb-6">🔒</div>
+            <h2 class="text-2xl font-black mb-4 uppercase tracking-tighter">Group Member Content</h2>
+            <p class="text-secondary max-w-md mb-8 leading-relaxed font-medium">
+              Join this group to access its events and participate in the community discussions.
+            </p>
+            @if (!myMembership()) {
+              <button class="btn btn-primary btn-lg shadow-primary px-10 font-black uppercase text-xs" (click)="requestJoin()">
+                Join Group
+              </button>
+            } @else if (isPendingMember) {
+              <div class="bg-muted/10 px-8 py-3 rounded-2xl border border-muted/20">
+                <span class="text-sm font-black text-muted uppercase tracking-widest">Request Pending...</span>
+              </div>
+            }
+          </div>
+        }
+      </main>
+
+    </div>
+  }
+</div>
+
+<!-- Modals -->
+@if (showMembersModal()) {
+  <app-members-modal
+    [members]="members()"
+    [requests]="pendingRequests()"
+    [invitations]="pendingInvitations()"
+    [canManage]="isOwnerOrAdmin"
+    [currentUserId]="currentUserId()"
+    [currentUserRole]="myRole"
+    (updateRole)="updateMemberRole($event.member, $event.role)"
+    (removeMember)="removeMember($event)"
+    (approveRequest)="approveMembership($event)"
+    (rejectRequest)="rejectMembership($event)"
+    (cancelInvitation)="cancelInvitation($event)"
+    (closed)="showMembersModal.set(false)">
+  </app-members-modal>
+}
+
+@if (showCreateEventModal()) {
+  <app-create-event-modal
+    [communityCode]="group()?.communityCode!"
+    [groupCode]="groupCode()!"
+    (created)="onEventCreated($event)"
+    (closed)="showCreateEventModal.set(false)">
+  </app-create-event-modal>
+}
+
+@if (showInviteModal()) {
+  <app-invite-modal
+    title="Add to Group"
+    description="Search for a community member to add to this group."
+    [usersList]="communityMembers()"
+    (invited)="onInvite($event)"
+    (closed)="showInviteModal.set(false)">
+  </app-invite-modal>
+}

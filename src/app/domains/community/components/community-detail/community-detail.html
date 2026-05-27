@@ -1,0 +1,270 @@
+<div class="detail-container animate-fadeIn">
+
+  <!-- Loading & Error States -->
+  @if (isLoading()) {
+    <div class="skeleton-detail card h-[600px]"></div>
+  }
+  @if (error() && !isLoading()) {
+    <div class="error-view card shadow-lg">
+      <div class="error-icon">🚫</div>
+      <h3 class="error-title">Oops! We hit a snag</h3>
+      <p class="error-message">{{ error() }}</p>
+      <button class="btn btn-primary mt-6 px-8" (click)="loadCommunity(communityCode()!)">Try Again</button>
+    </div>
+  }
+
+  <!-- Community Content -->
+  @if (community(); as c) {
+    <div class="two-column-layout">
+      
+      <!-- LEFT COLUMN: Community Details (Sticky) -->
+      <aside class="left-sidebar">
+        <div class="sticky-top">
+          <div class="community-card-main card shadow-sm">
+            <div class="community-cover-wrapper">
+              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1000" 
+                   class="community-cover" 
+                   alt="Community Cover">
+            </div>
+
+            <div class="p-6">
+              <h1 class="community-title-v3">{{ c.name }}</h1>
+              
+              <div class="role-badge-container mb-4">
+                @if (myRole) {
+                  <span class="role-badge" [attr.data-role]="myRole">{{ myRole }}</span>
+                }
+              </div>
+
+              <p class="community-description-v3 text-secondary text-sm leading-relaxed mb-6">
+                {{ c.description || 'No description provided.' }}
+              </p>
+              
+              <div class="stats-grid-v3 border-t border-b py-6 mb-6">
+                <div class="stat-item-v3 clickable" (click)="openMembersModal()">
+                  <span class="stat-label">Members</span>
+                  <span class="stat-value">{{ acceptedMemberCount() | number }}</span>
+                </div>
+                <div class="stat-item-v3">
+                  <span class="stat-label">Groups</span>
+                  <span class="stat-value">{{ c.groupCount }}</span>
+                </div>
+              </div>
+
+              <div class="owner-box mb-8">
+                <span class="text-xs font-bold text-muted uppercase tracking-widest block mb-2">Community Owner</span>
+                <a [routerLink]="['/app/user', c.createdBy.userCode]" 
+                   target="_blank" 
+                   class="owner-link-v3">
+                  <div class="avatar avatar-xs">
+                    {{ (c.createdBy.name || 'O').charAt(0) }}
+                  </div>
+                  <span class="font-bold">{{ c.createdBy.name || c.createdBy.email }}</span>
+                </a>
+              </div>
+
+              <div class="action-buttons-v3">
+                @if (!myMembership()) {
+                  <button class="btn btn-primary btn-lg w-full shadow-primary" (click)="requestJoin()">
+                    Request to Join
+                  </button>
+                } @else if (myMembership()?.status === 'PENDING_INVITATION') {
+                  <div class="flex flex-col gap-2">
+                    <button class="btn btn-success w-full" (click)="acceptInvitation()">Accept Invite</button>
+                    <button class="btn btn-outline w-full" (click)="leaveCommunity()">Decline</button>
+                  </div>
+                } @else if (isPendingMember) {
+                  <button class="btn btn-muted w-full" disabled>Request Pending</button>
+                } @else if (isAcceptedMember) {
+                  <button class="btn btn-outline w-full" (click)="showInviteModal.set(true)">Invite Member</button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT COLUMN: Tabbed Sections -->
+      <main class="right-content">
+        @if (isAcceptedMember) {
+          <nav class="tabs-nav-v3 card shadow-sm mb-4">
+            <button class="tab-item-v3" [class.active]="activeTab === 'updates'" (click)="setTab('updates')">
+              Updates
+            </button>
+            <button class="tab-item-v3" [class.active]="activeTab === 'events'" (click)="setTab('events')">
+              Events
+            </button>
+            <button class="tab-item-v3" [class.active]="activeTab === 'groups'" (click)="setTab('groups')">
+              Groups
+            </button>
+          </nav>
+
+          <div class="tab-content-v3">
+            <!-- Updates Tab -->
+            @if (activeTab === 'updates') {
+              <div class="chat-wrapper-v3 card shadow-sm animate-fadeIn">
+                <div class="chat-header-v3 p-4 border-b">
+                  <h3 class="font-bold">Community Chat</h3>
+                </div>
+                <div class="chat-body-v3">
+                  <app-message-thread 
+                    [communityCode]="c.communityCode" 
+                    [canChat]="canChatInNotices">
+                  </app-message-thread>
+                </div>
+              </div>
+            }
+
+            <!-- Events Tab -->
+            @if (activeTab === 'events') {
+              <div class="section-container animate-fadeIn">
+                <!-- Reorganized Inner Header -->
+                <div class="view-header-reorg mb-6">
+                  <!-- Search Top-Middle -->
+                  <div class="search-top-middle">
+                    <div class="search-box-v3">
+                      <span class="icon">🔍</span>
+                      <input type="text" placeholder="Search events..." [value]="eventSearch()" (input)="eventSearch.set($any($event.target).value)">
+                    </div>
+                  </div>
+
+                  <div class="filters-and-actions mt-4">
+                    <!-- Filters Left -->
+                    <div class="filter-bubbles-v3">
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'ongoing'" (click)="eventFilter.set('ongoing')">Ongoing</button>
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'upcoming'" (click)="eventFilter.set('upcoming')">Upcoming</button>
+                      <button class="bubble-v3" [class.active]="eventFilter() === 'past'" (click)="eventFilter.set('past')">Past</button>
+                    </div>
+
+                    <!-- New Button Right -->
+                    @if (isOwnerOrAdmin) {
+                      <button class="btn btn-primary btn-sm" (click)="showCreateEventModal.set(true)">+ New Event</button>
+                    }
+                  </div>
+                </div>
+
+                <div class="grid-v3">
+                  @for (event of filteredEvents(); track event.eventCode) {
+                    <div class="card hover-lift transition-all overflow-hidden flex flex-col">
+                      <app-event-card [event]="event"></app-event-card>
+                      <div class="p-3 border-t bg-muted/20 text-[10px] text-center text-muted font-bold uppercase">
+                        Did you attend? 
+                        <span class="ml-2 text-primary-color">Not Marked</span>
+                      </div>
+                    </div>
+                  } @empty {
+                    <div class="empty-placeholder card p-12 text-center col-span-full">
+                      <p class="text-muted italic">No {{ eventFilter() }} events found.</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Groups Tab -->
+            @if (activeTab === 'groups') {
+              <div class="section-container animate-fadeIn">
+                <!-- Reorganized Inner Header -->
+                <div class="view-header-reorg mb-6">
+                  <!-- Search Top-Middle -->
+                  <div class="search-top-middle">
+                    <div class="search-box-v3">
+                      <span class="icon">🔍</span>
+                      <input type="text" placeholder="Search groups..." [value]="groupSearch()" (input)="groupSearch.set($any($event.target).value)">
+                    </div>
+                  </div>
+
+                  <div class="filters-and-actions mt-4">
+                    <!-- Filters Left -->
+                    <div class="filter-bubbles-v3">
+                      <button class="bubble-v3" [class.active]="groupFilter() === 'my'" (click)="groupFilter.set('my')">My Groups</button>
+                      <button class="bubble-v3" [class.active]="groupFilter() === 'all'" (click)="groupFilter.set('all')">All Groups</button>
+                    </div>
+
+                    <!-- New Button Right -->
+                    @if (isOwnerOrAdmin) {
+                      <button class="btn btn-primary btn-sm" (click)="showCreateGroupModal.set(true)">+ New Group</button>
+                    }
+                  </div>
+                </div>
+
+                <div class="grid-v3">
+                  @for (group of filteredGroups(); track group.groupCode) {
+                    <app-group-card [group]="group"></app-group-card>
+                  } @empty {
+                    <div class="empty-placeholder card p-12 text-center col-span-full">
+                      <p class="text-muted italic">No groups found.</p>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="locked-content card p-20 shadow-xl flex flex-col items-center justify-center text-center animate-fadeIn">
+            <div class="lock-icon-v3 mb-6">🔒</div>
+            <h2 class="text-2xl font-black mb-4 uppercase tracking-tighter">Member Exclusive Content</h2>
+            <p class="text-secondary max-w-md mb-8 leading-relaxed font-medium">
+              Join this community to access its updates, events, and sub-groups. 
+              Be part of the conversation and stay connected with other members.
+            </p>
+            @if (!myMembership()) {
+              <button class="btn btn-primary btn-lg shadow-primary px-10" (click)="requestJoin()">
+                Join Tribe Now
+              </button>
+            } @else if (isPendingMember) {
+              <div class="bg-muted/10 px-8 py-3 rounded-2xl border border-muted/20">
+                <span class="text-sm font-black text-muted uppercase tracking-widest">Waiting for Approval...</span>
+              </div>
+            }
+          </div>
+        }
+      </main>
+
+    </div>
+  }
+</div>
+
+<!-- Modals -->
+@if (showMembersModal()) {
+  <app-members-modal
+    [members]="members()"
+    [requests]="pendingRequests()"
+    [invitations]="pendingInvitations()"
+    [canManage]="isOwnerOrAdmin"
+    [currentUserId]="currentUserId()"
+    [currentUserRole]="myRole"
+    (updateRole)="updateMemberRole($event.member, $event.role)"
+    (removeMember)="removeMember($event)"
+    (approveRequest)="approveMembership($event)"
+    (rejectRequest)="rejectMembership($event)"
+    (cancelInvitation)="cancelInvitation($event)"
+    (closed)="showMembersModal.set(false)">
+  </app-members-modal>
+}
+
+@if (showCreateGroupModal()) {
+  <app-create-group-modal
+    [communityCode]="communityCode()!"
+    (created)="onGroupCreated($event)"
+    (closed)="showCreateGroupModal.set(false)">
+  </app-create-group-modal>
+}
+
+@if (showCreateEventModal()) {
+  <app-create-event-modal
+    [communityCode]="communityCode()!"
+    [groupCode]="null"
+    (created)="onEventCreated($event)"
+    (closed)="showCreateEventModal.set(false)">
+  </app-create-event-modal>
+}
+
+@if (showInviteModal()) {
+  <app-invite-modal
+    title="Invite to Community"
+    description="Invite a user to join this community."
+    (invited)="onInvite($event)"
+    (closed)="showInviteModal.set(false)">
+  </app-invite-modal>
+}

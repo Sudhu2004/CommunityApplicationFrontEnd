@@ -1,0 +1,42 @@
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-3);
+  background: var(--bg-input);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+  border: 1px solid var(--border-color);
+}
+
+.input-container:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+}
+
+.input-wrapper {
+  flex: 1;
+  display: flex;
+}
+
+.chat-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 0;
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  resize: none;
+  max-height: 120px;
+  min-height: 24px;
+}
+
+.chat-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.attach-btn, .send-btn {
+  flex-shrink: 0;
+  margin-bottom: 2px;
+}

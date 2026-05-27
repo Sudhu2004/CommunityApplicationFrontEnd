@@ -1,0 +1,116 @@
+<div class="auth-layout">
+  <!-- Left Panel: Branding -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-content animate-fadeIn">
+      <div class="brand-logo mb-6" style="margin-bottom: var(--space-6)">
+        <div class="logo-icon">T</div>
+        <span class="brand-name text-inverse text-2xl font-bold">Tribe</span>
+      </div>
+      <h1 class="text-inverse text-4xl font-extrabold mb-4" style="margin-bottom: var(--space-4)">Join the community.</h1>
+      <p class="text-inverse mb-8" style="opacity: 0.8; font-size: var(--text-lg)">Create an account to start building and joining communities.</p>
+      
+      <div class="feature-pills">
+        <div class="pill animate-float"><span class="mr-2">🚀</span> Easy Setup</div>
+        <div class="pill animate-float" style="animation-delay: 0.5s"><span class="mr-2">🛡️</span> Secure & Private</div>
+        <div class="pill animate-float" style="animation-delay: 1s"><span class="mr-2">🤝</span> Meaningful Connections</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel: Form -->
+  <div class="auth-form-panel" style="padding: var(--space-4) 0">
+    <div class="auth-form-container animate-slideUp">
+      <div class="form-header mb-6" style="margin-bottom: var(--space-6)">
+        <h2 class="text-3xl font-bold mb-2">Create an account</h2>
+        <p class="text-secondary">Fill in your details below.</p>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="alert alert-error mb-4" style="margin-bottom: var(--space-4)">
+          <span class="alert-icon">⚠</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate class="flex-col gap-3">
+        <!-- Full Name -->
+        <div class="form-group" style="margin: 0">
+          <label for="name" class="form-label">Full Name</label>
+          <input id="name" type="text" class="form-input" formControlName="name" placeholder="John Doe" [class.error]="name?.invalid && name?.touched" />
+          @if (name?.invalid && name?.touched) {
+            <span class="form-error mt-1" style="margin-top: var(--space-1)">
+              @if (name?.errors?.['required']) { Required field }
+            </span>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group" style="margin: 0">
+          <label for="email" class="form-label">Email</label>
+          <input id="email" type="email" class="form-input" formControlName="email" placeholder="john@example.com" [class.error]="email?.invalid && email?.touched" />
+          @if (email?.invalid && email?.touched) {
+            <span class="form-error mt-1" style="margin-top: var(--space-1)">
+              @if (email?.errors?.['required']) { Required field }
+              @if (email?.errors?.['email']) { Invalid email format }
+            </span>
+          }
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group" style="margin: 0">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input id="phone" type="text" class="form-input" formControlName="phone" placeholder="1234567890" [class.error]="phone?.invalid && phone?.touched" />
+          @if (phone?.invalid && phone?.touched) {
+            <span class="form-error mt-1" style="margin-top: var(--space-1)">
+              @if (phone?.errors?.['required']) { Required field }
+              @if (phone?.errors?.['pattern']) { Must be 10 digits }
+            </span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group" style="margin: 0">
+          <label for="password" class="form-label">Password</label>
+          <div style="position: relative;">
+            <input id="password" [type]="showPassword() ? 'text' : 'password'" class="form-input" formControlName="password" placeholder="••••••••" [class.error]="password?.invalid && password?.touched" style="padding-right: 40px" />
+            <button type="button" class="btn-icon" style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted);" (click)="togglePasswordVisibility()">
+              {{ showPassword() ? '👁' : '👁‍🗨' }}
+            </button>
+          </div>
+          @if (password?.invalid && password?.touched) {
+            <span class="form-error mt-1" style="margin-top: var(--space-1)">
+              @if (password?.errors?.['required']) { Required field }
+              @if (password?.errors?.['minlength']) { Minimum 8 characters }
+            </span>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group" style="margin: 0">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div style="position: relative;">
+            <input id="confirmPassword" [type]="showConfirmPassword() ? 'text' : 'password'" class="form-input" formControlName="confirmPassword" placeholder="••••••••" [class.error]="(confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)" style="padding-right: 40px" />
+            <button type="button" class="btn-icon" style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted);" (click)="toggleConfirmPasswordVisibility()">
+              {{ showConfirmPassword() ? '👁' : '👁‍🗨' }}
+            </button>
+          </div>
+          @if ((confirmPassword?.invalid && confirmPassword?.touched) || (registerForm.errors?.['passwordMismatch'] && confirmPassword?.touched)) {
+            <span class="form-error mt-1" style="margin-top: var(--space-1)">
+              @if (confirmPassword?.errors?.['required']) { Required field }
+              @if (registerForm.errors?.['passwordMismatch']) { Passwords do not match }
+            </span>
+          }
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full mt-4" style="margin-top: var(--space-4)" [disabled]="registerForm.invalid || isLoading()">
+          @if (isLoading()) { <span class="spinner mr-2" style="margin-right: var(--space-2)"></span> Creating account... } 
+          @else { Create Account }
+        </button>
+      </form>
+
+      <div class="text-center mt-6 pt-4 border-t" style="margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--border-color)">
+        <p class="text-secondary text-sm">Already have an account? <a routerLink="/auth/login" class="font-semibold text-primary-color">Log in</a></p>
+      </div>
+    </div>
+  </div>
+</div>

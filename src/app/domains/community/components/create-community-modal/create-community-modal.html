@@ -1,0 +1,94 @@
+<!-- Backdrop -->
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <h2 id="modal-title" class="modal-title">Create a Community</h2>
+      <button class="btn btn-icon btn-ghost" (click)="close()" [disabled]="isSubmitting()" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+
+      <!-- API Error -->
+      @if (error()) {
+        <div class="form-error-banner">
+          <span>⚠️ {{ error() }}</span>
+        </div>
+      }
+
+      <!-- Name -->
+      <div class="form-group">
+        <label class="form-label" for="community-name">
+          Community Name <span class="required">*</span>
+        </label>
+        <input
+          id="community-name"
+          type="text"
+          class="form-input"
+          [class.input-error]="nameError"
+          placeholder="e.g. Angular Developers"
+          [(ngModel)]="name"
+          maxlength="255"
+          autocomplete="off"
+        >
+        <div class="form-hint-row">
+          @if (nameError) {
+            <span class="form-hint error">{{ nameError }}</span>
+          } @else {
+            <span class="form-hint">Min 2 characters.</span>
+          }
+          <span class="char-count" [class.over]="name.length > 255">
+            {{ name.length }}/255
+          </span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="community-desc">
+          Description <span class="optional">(optional)</span>
+        </label>
+        <textarea
+          id="community-desc"
+          class="form-input form-textarea"
+          [class.input-error]="descError"
+          placeholder="What is this community about?"
+          [(ngModel)]="description"
+          maxlength="1000"
+          rows="4">
+        </textarea>
+        <div class="form-hint-row">
+          @if (descError) {
+            <span class="form-hint error">{{ descError }}</span>
+          } @else {
+            <span class="form-hint">Max 1000 characters.</span>
+          }
+          <span class="char-count" [class.over]="description.length > 1000">
+            {{ description.length }}/1000
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-outline" (click)="close()" [disabled]="isSubmitting()">
+        Cancel
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="submit()"
+        [disabled]="!isValid || isSubmitting()">
+        @if (isSubmitting()) {
+          <span class="spinner"></span> Creating…
+        } @else {
+          Create Community
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

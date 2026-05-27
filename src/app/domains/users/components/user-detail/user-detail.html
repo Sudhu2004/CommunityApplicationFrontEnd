@@ -1,0 +1,84 @@
+<div class="user-detail-container">
+  <div class="user-detail-header">
+    <div class="header-content">
+      <h1>User Dashboard</h1>
+      <p>Welcome, <strong>{{ currentUser()?.name || currentUser()?.email }}</strong>!</p>
+    </div>
+    <button class="logout-button" (click)="logout()" title="Logout">
+      Logout
+    </button>
+  </div>
+
+  <div class="user-info-card">
+    <h2>Your Profile</h2>
+    <div class="profile-info">
+      <div class="info-item">
+        <span class="label">Name:</span>
+        <span class="value">{{ currentUser()?.name || 'N/A' }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Email:</span>
+        <span class="value">{{ currentUser()?.email }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">User Code:</span>
+        <span class="value">{{ currentUser()?.userCode }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error()) {
+    <div class="error-message">
+      <p>{{ error() }}</p>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p>Loading users...</p>
+    </div>
+  }
+
+  <!-- Users Table -->
+  @if (!isLoading()) {
+    <div class="users-table-container">
+      <h2>All Registered Users</h2>
+      <div class="table-wrapper">
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (users().length > 0) {
+              @for (user of users(); track user.userCode) {
+                <tr>
+                  <td>{{ user.userCode }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.name || 'N/A' }}</td>
+                  <td>{{ user.phone || 'N/A' }}</td>
+                  <td>
+                    <span class="badge" [class.badge-success]="user.active" [class.badge-muted]="!user.active">
+                      {{ user.active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            } @else {
+              <tr>
+                <td colspan="5" class="no-data">No users found</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
