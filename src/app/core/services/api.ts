@@ -63,8 +63,6 @@ export class Api {
    * Handle HTTP errors
    */
   private handleError(error: HttpErrorResponse) {
-    console.log("RAW ERROR:", error);
-
     const message =
       error?.error?.message ||   // backend message
       error?.message ||

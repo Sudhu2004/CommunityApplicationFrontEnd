@@ -117,7 +117,6 @@ export class Activation implements OnInit, OnDestroy {
           this.startResendCountdown();
 
           // Show success feedback (you can add a success message property if needed)
-          console.log('Activation code resent successfully');
         } else {
           this.error = response.message || 'Failed to resend code';
         }

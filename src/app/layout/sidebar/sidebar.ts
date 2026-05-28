@@ -46,7 +46,6 @@ export class Sidebar implements OnInit {
         this.loadMyCommunities(code);
       },
       error: (error) => {
-        console.error('Failed to fetch user code:', error);
       }
     });
   }
@@ -68,7 +67,7 @@ export class Sidebar implements OnInit {
         // If not, I'll need to update this later.
         this.myCommunities.set(communities);
       },
-      error: (err) => console.error('Failed to load my communities:', err)
+      error: (err) => {}
     });
   }
 

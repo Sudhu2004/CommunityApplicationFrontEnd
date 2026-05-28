@@ -29,7 +29,7 @@ export class Topbar implements OnInit {
   loadActivities() {
     this.activityService.getActivitiesByType('USER').subscribe({
       next: (data) => this.activities.set(data),
-      error: (err) => console.error('Failed to load notifications:', err)
+      error: (err) => {}
     });
   }
 

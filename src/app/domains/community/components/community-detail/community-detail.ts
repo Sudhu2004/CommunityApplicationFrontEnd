@@ -161,7 +161,6 @@ export class CommunityDetail implements OnInit {
         this.groupsLoading.set(false);
       },
       error: (err) => {
-        console.error('Failed to load groups:', err);
         this.groupsLoading.set(false);
       }
     });
@@ -185,7 +184,6 @@ export class CommunityDetail implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Failed to load events:', err);
         this.eventsLoading.set(false);
       }
     });

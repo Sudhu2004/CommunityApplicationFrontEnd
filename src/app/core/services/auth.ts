@@ -197,14 +197,11 @@ export class Auth {
         this.currentUserEmailSignal.set(response.userEmail); // Set email signal
         
         // Fetch complete user data in the background (don't block login)
-        this.fetchAndPersistUserDataByEmail(response.userEmail).subscribe({
-          error: (error) => console.warn('Failed to fetch user data after login:', error)
-        });
+        this.fetchAndPersistUserDataByEmail(response.userEmail).subscribe();
         
         this.loadingSignal.set(false);
       }),
       catchError((error) => {
-        console.log('FINAL ERROR:', error);
         this.errorSignal.set(error.message);
         this.loadingSignal.set(false);
         return throwError(() => error);
@@ -243,9 +240,7 @@ export class Auth {
           this.errorSignal.set(null);
           
           // Fetch complete user data in the background (don't block activation)
-          this.fetchAndPersistUserDataByEmail(response.userEmail).subscribe({
-            error: (error) => console.warn('Failed to fetch user data after activation:', error)
-          });
+          this.fetchAndPersistUserDataByEmail(response.userEmail).subscribe();
         }
         this.loadingSignal.set(false);
       }),
@@ -369,9 +364,7 @@ export class Auth {
 
       // If we have email but no user data, fetch it
       if (email && !userData) {
-        this.fetchAndPersistUserDataByEmail(email).subscribe({
-          error: (err) => console.warn('Failed to refresh user data:', err)
-        });
+        this.fetchAndPersistUserDataByEmail(email).subscribe();
       }
     } else {
       this.isAuthenticatedSignal.set(false);

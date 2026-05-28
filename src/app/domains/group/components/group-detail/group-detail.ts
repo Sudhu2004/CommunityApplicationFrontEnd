@@ -132,7 +132,7 @@ export class GroupDetail implements OnInit {
       next: (members) => {
         this.communityMembers.set(members.map(m => m.user));
       },
-      error: (err: any) => console.error('Failed to load community members:', err)
+      error: (err: any) => {}
     });
   }
 
@@ -154,7 +154,6 @@ export class GroupDetail implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error('Failed to load events:', err);
         this.eventsLoading.set(false);
       }
     });
@@ -164,7 +163,6 @@ export class GroupDetail implements OnInit {
     this.membersLoading.set(true);
     this.groupService.getMembers(code).subscribe({
       next: (members) => {
-        console.log('Loaded members:', members);
         this.members.set(members.filter(m => m.status === 'ACCEPTED'));
         this.pendingRequests.set(members.filter(m => m.status === 'PENDING_APPROVAL'));
         this.pendingInvitations.set(members.filter(m => m.status === 'PENDING_INVITATION'));

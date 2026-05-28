@@ -140,7 +140,6 @@ export class Register {
     this.authService.register(registerRequest).subscribe({
       next: (response) => {
         if (response.activationCodeDelivered) {
-          console.log('Registration successful, activation code sent to email');
           // Navigate to activation page
           this.router.navigate(['/auth/activation'], {
             queryParams: { email: response.email }

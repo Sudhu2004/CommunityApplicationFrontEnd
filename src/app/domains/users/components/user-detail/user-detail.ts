@@ -40,7 +40,6 @@ export class UserDetail implements OnInit {
       error: (error) => {
         this.error.set(error.error?.message || 'Failed to load users');
         this.isLoading.set(false);
-        console.error('Error loading users:', error);
       },
     });
   }

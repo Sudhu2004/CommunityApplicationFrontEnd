@@ -75,13 +75,11 @@ export class MessageThread implements OnInit, OnDestroy {
     forkJoin({
       messages: messagesObs$.pipe(
         catchError(err => {
-          console.error('Failed to load messages', err);
           return of([] as MessageDTO[]);
         })
       ),
       activities: activitiesObs$.pipe(
         catchError(err => {
-          console.warn('Failed to load activities', err);
           return of([] as Activity[]);
         })
       )
@@ -102,7 +100,6 @@ export class MessageThread implements OnInit, OnDestroy {
         this.handleHistory([...messages, ...mappedActivities]);
       },
       error: (err) => {
-        console.error('Unexpected error in history loading', err);
         this.isLoading.set(false);
       }
     });
@@ -110,7 +107,6 @@ export class MessageThread implements OnInit, OnDestroy {
     try {
       await this.messagingService.connect();
     } catch (err) {
-      console.error('Socket connect failed', err);
     }
   }
 
@@ -119,6 +115,7 @@ export class MessageThread implements OnInit, OnDestroy {
     
     let topic = '';
     if (this.eventCode) topic = `/topic/event/${this.eventCode}/messages`;
+    else if (this.groupCode) topic = `/topic/group/${this.groupCode}/messages`;
     else if (this.communityCode) topic = `/topic/community/${this.communityCode}/messages`;
 
     if (topic) {
@@ -164,8 +161,8 @@ export class MessageThread implements OnInit, OnDestroy {
     };
 
     this.messagingService.sendMessage(payload).subscribe({
-      next: () => console.log('REST: Sent'),
-      error: (err) => console.error('REST: Failed', err)
+      next: () => {},
+      error: (err) => {}
     });
   }
 

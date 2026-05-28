@@ -29,11 +29,6 @@ export class MessagingService {
   isLoading = this.loadingSignal.asReadonly();
   error = this.errorSignal.asReadonly();
   status = this.connectionStatus.asReadonly();
-  private baseUrl = '';
-
-  ngOnInit() {
-    this.baseUrl = environment.apiUrl; // Ensure base URL is set for SockJS
-  }
 
   private begin() {
     this.loadingSignal.set(true);
@@ -42,7 +37,6 @@ export class MessagingService {
 
   private handleErr(msg: string) {
     return (error: any) => {
-      console.error(`MessagingService Error [${msg}]:`, error);
       this.errorSignal.set(error.message || msg);
       this.loadingSignal.set(false);
       throw error;
@@ -82,17 +76,13 @@ export class MessagingService {
         throw new Error('Authentication required for WebSocket connection');
       }
 
-      console.log('STOMP: Connecting with userCode:', userCode);
-
       return new Promise((resolve, reject) => {
+        const baseUrl = environment.apiUrl;
         this.stompClient = new Client({
-          webSocketFactory: () => new SockJS(`${this.baseUrl}/ws`),
+          webSocketFactory: () => new SockJS(`${baseUrl}/ws`),
           connectHeaders: {
             Authorization: `Bearer ${token}`,
             userCode: userCode,
-          },
-          debug: (msg) => {
-            console.log('STOMP DEBUG:', msg);
           },
           reconnectDelay: 5000,
           heartbeatIncoming: 4000,
@@ -100,13 +90,11 @@ export class MessagingService {
         });
 
         this.stompClient.onConnect = () => {
-          console.log('STOMP: Connected');
           this.connectionStatus.set('CONNECTED');
           resolve();
         };
 
         this.stompClient.onStompError = (frame) => {
-          console.error('STOMP: Error', frame.headers['message']);
           this.connectionStatus.set('DISCONNECTED');
           this.errorSignal.set(frame.headers['message']);
           reject(new Error(frame.headers['message']));
@@ -143,11 +131,9 @@ export class MessagingService {
   ): StompSubscription[] {
     if (!this.stompClient?.connected) return [];
 
-    console.log('STOMP: Subscribing to', topic);
     const subs: StompSubscription[] = [];
     
     subs.push(this.stompClient.subscribe(topic, (message: IMessage) => {
-      console.log('STOMP: Message received', message.body);
       onMessage(JSON.parse(message.body));
     }));
 

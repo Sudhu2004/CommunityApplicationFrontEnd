@@ -164,7 +164,7 @@ export class EventDetail implements OnInit {
       next: (members) => {
         this.groupMembers.set(members.filter(m => m.status === 'ACCEPTED'));
       },
-      error: (err) => console.error('Failed to load group members:', err)
+      error: (err) => {}
     });
   }
 
@@ -176,7 +176,6 @@ export class EventDetail implements OnInit {
         this.attendanceLoading.set(false);
       },
       error: (err) => {
-        console.error('Failed to load attendance:', err);
         this.attendanceLoading.set(false);
       }
     });
@@ -185,7 +184,7 @@ export class EventDetail implements OnInit {
   loadStats(code: string) {
     this.eventService.getAttendanceStats(code).subscribe({
       next: (stats) => this.stats.set(stats),
-      error: (err) => console.error('Failed to load stats:', err)
+      error: (err) => {}
     });
   }
 
@@ -205,7 +204,7 @@ export class EventDetail implements OnInit {
   loadMessages(code: string) {
     this.messagingService.getMessagesByEvent(code).subscribe({
       next: (page) => this.messagesList.set(page.content),
-      error: (err) => console.error('Failed to load messages:', err)
+      error: (err) => {}
     });
   }
 
