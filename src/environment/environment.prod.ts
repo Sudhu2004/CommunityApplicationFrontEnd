@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://ec2-13-60-34-105.eu-north-1.compute.amazonaws.com:8080'   // no port 8080, Nginx handles it
+  apiUrl: 'http://13.60.34.105'   // no port 8080, Nginx handles it
 };
