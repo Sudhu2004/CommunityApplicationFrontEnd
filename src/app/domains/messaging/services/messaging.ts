@@ -77,9 +77,8 @@ export class MessagingService {
       }
 
       return new Promise((resolve, reject) => {
-        const baseUrl = environment.apiUrl;
         this.stompClient = new Client({
-          webSocketFactory: () => new SockJS(`${baseUrl}/ws`),
+          webSocketFactory: () => new SockJS(`/ws`),
           connectHeaders: {
             Authorization: `Bearer ${token}`,
             userCode: userCode,
