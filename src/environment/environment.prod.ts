@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://13.60.34.105'   // no port 8080, Nginx handles it
+  apiUrl: 'https://borough.in'   // no port 8080, Nginx handles it
 };
 
 // // environment.ts (local)
