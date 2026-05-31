@@ -45,7 +45,7 @@ export class ProfilePage implements OnInit {
       next: (profile) => {
         this.profile.set(profile);
         this.breadcrumbService.setBreadcrumbs([
-          { label: 'Tribe', url: '/app/communities' },
+          { label: 'Borough', url: '/app/communities' },
           { label: profile.name, url: `/app/user/${userCode}` }
         ]);
 

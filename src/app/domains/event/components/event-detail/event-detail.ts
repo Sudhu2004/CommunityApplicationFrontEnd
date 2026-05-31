@@ -104,7 +104,7 @@ export class EventDetail implements OnInit {
         this.loadRoles(event);
 
         const breadcrumbs = [
-          { label: 'Tribe', url: '/app/communities' },
+          { label: 'Borough', url: '/app/communities' },
           { label: event.communityName || 'Community', url: `/app/communities/${event.communityCode}` }
         ];
         if (event.groupCode) {

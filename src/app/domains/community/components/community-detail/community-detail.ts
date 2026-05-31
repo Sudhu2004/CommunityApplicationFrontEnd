@@ -141,8 +141,8 @@ export class CommunityDetail implements OnInit {
         this.loadMembers(code); // Always load members to have accurate counts and pending requests
 
         this.breadcrumbService.setBreadcrumbs([
-          { label: 'Tribe', url: '/app/communities' },
-          { label: community.name, url: `/app/communities/${code}` }
+          { label: 'Borough', url: '/app/communities' },
+          { label: community.name, url: `/app/communities/${community.communityCode}` },
         ]);
       },
       error: (err: any) => {

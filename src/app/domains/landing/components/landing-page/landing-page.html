@@ -3,8 +3,8 @@
   <header class="navbar">
     <div class="nav-content">
       <div class="brand">
-        <div class="logo-icon">T</div>
-        <span class="brand-name">Tribe</span>
+        <div class="logo-icon">B</div>
+        <span class="brand-name">Borough</span>
       </div>
       <nav class="nav-links">
         <a href="#features">Features</a>
@@ -20,15 +20,14 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="hero-content animate-slideUp">
-      <div class="badge badge-primary mb-4" style="margin-bottom: var(--space-4)">✨ The new way to connect</div>
-      <h1 class="hero-title">Build communities.<br>Organize your groups.<br>Host events.</h1>
+      <div class="badge badge-primary mb-4" style="margin-bottom: var(--space-4)">✨ Connect. Organize. Grow.</div>
+      <h1 class="hero-title">The heart of your<br>community.</h1>
       <p class="hero-subtitle">
-        Tribe is the ultimate platform for bringing people together.
-        Whether you're running a club, organizing a meetup, or building a global network, we provide the tools you need.
+        Borough is a unified space designed for organizations to thrive. Create communities, organize specialized groups, and host memorable events—all in one place.
       </p>
       <div class="hero-actions">
         <a routerLink="/auth/register" class="btn btn-primary btn-lg">Start your community</a>
-        <a href="#features" class="btn btn-outline btn-lg">Learn more</a>
+        <a href="#features" class="btn btn-outline btn-lg">Explore features</a>
       </div>
     </div>
 
@@ -37,12 +36,15 @@
       <div class="orb orb-1 animate-float"></div>
       <div class="orb orb-2 animate-float" style="animation-delay: 1s"></div>
       <div class="hero-card card-1 animate-float" style="animation-delay: 0.5s">
-        <div class="avatar avatar-md mb-2">👤</div>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="avatar avatar-sm">C</div>
+          <div class="h-line w-1/2"></div>
+        </div>
         <div class="h-line w-full mb-1"></div>
         <div class="h-line w-2/3"></div>
       </div>
       <div class="hero-card card-2 animate-float" style="animation-delay: 1.5s">
-        <div class="badge badge-accent mb-2">New Event</div>
+        <div class="badge badge-accent mb-2">Attendance: 94%</div>
         <div class="h-line w-full mb-1"></div>
         <div class="h-line w-1/2"></div>
       </div>
@@ -51,32 +53,77 @@
 
   <!-- Features Section -->
   <section id="features" class="features">
-    <div class="section-header text-center mb-8" style="margin-bottom: var(--space-10)">
-      <h2>Everything you need to grow</h2>
-      <p class="text-secondary">Powerful tools designed for community leaders and members alike.</p>
+    <div class="section-header text-center mb-10" style="margin-bottom: var(--space-10)">
+      <h2 class="mb-4">Everything you need to lead</h2>
+      <p class="text-secondary max-w-2xl mx-auto">Powerful, intuitive tools designed to help community leaders manage growth and engagement without the friction.</p>
     </div>
 
     <div class="grid-3 container">
       <!-- Feature 1 -->
-      <div class="card feature-card text-center">
-        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">👥</div>
-        <h3>Communities & Groups</h3>
-        <p class="text-secondary">Create a main community and organize smaller subgroups within it. Manage roles and
-          permissions effortlessly.</p>
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">👥</div>
+        <h3>Structured Communities</h3>
+        <p class="text-secondary">Organize your organization into specialized sub-groups. Each group gets its own space, members, and events while remaining part of the main hub.</p>
       </div>
       <!-- Feature 2 -->
-      <div class="card feature-card text-center">
-        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">📅</div>
-        <h3>Event Management</h3>
-        <p class="text-secondary">Schedule virtual or in-person events. Track RSVPs, send reminders, and share event
-          details seamlessly.</p>
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">📊</div>
+        <h3>Intelligent Events</h3>
+        <p class="text-secondary">Host events with real-time RSVPs and streamlined attendance management. Generate detailed statistics and share important notices instantly.</p>
       </div>
       <!-- Feature 3 -->
-      <div class="card feature-card text-center">
-        <div class="feature-icon mb-4" style="margin-bottom: var(--space-4)">💬</div>
-        <h3>Real-time Messaging</h3>
-        <p class="text-secondary">Keep the conversation going before, during, and after events with dedicated event chat
-          channels.</p>
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">💬</div>
+        <h3>Contextual Messaging</h3>
+        <p class="text-secondary">Real-time communication integrated at every level. Chat in communities, groups, or specific event channels to keep the context clear.</p>
+      </div>
+      <!-- Feature 4 -->
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">🛡️</div>
+        <h3>Admin Governance</h3>
+        <p class="text-secondary">Take control with granular permissions. Set announcement-only channels, manage member requests, and define custom roles for your team.</p>
+      </div>
+      <!-- Feature 5 -->
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">📈</div>
+        <h3>Activity Insights</h3>
+        <p class="text-secondary">Keep your finger on the pulse with a centralized activity feed. Monitor updates, member milestones, and upcoming events at a glance.</p>
+      </div>
+      <!-- Feature 6 -->
+      <div class="card feature-card">
+        <div class="feature-icon mb-4">👤</div>
+        <h3>Unified Profiles</h3>
+        <p class="text-secondary">Give members a home for their activity. Track contributions, event attendance, and community involvement across the entire platform.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it Works Section -->
+  <section id="how-it-works" class="how-it-works">
+    <div class="container">
+      <div class="section-header text-center mb-10" style="margin-bottom: var(--space-10)">
+        <h2>Getting started is simple</h2>
+        <p class="text-secondary">Three steps to a more engaged community.</p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h4>Launch your Community</h4>
+          <p class="text-secondary">Create your organization's digital home in seconds. Set your vision and invite your first members.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h4>Organize into Groups</h4>
+          <p class="text-secondary">Structure your community into focused interest or working groups for better collaboration and engagement.</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h4>Host and Engage</h4>
+          <p class="text-secondary">Schedule events, start conversations, and track growth with our powerful suite of community tools.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -84,21 +131,25 @@
   <!-- CTA Section -->
   <section class="cta-section">
     <div class="cta-content container text-center">
-      <h2>Ready to build your Tribe?</h2>
-      <p>Join thousands of community leaders who are bringing people together.</p>
-      <a routerLink="/auth/register" class="btn btn-accent btn-lg mt-6" style="margin-top: var(--space-6)">Create your
-        account</a>
+      <h2>Ready to build your Borough?</h2>
+      <p class="mb-6">Join community leaders who are bringing people together with Borough.</p>
+      <a routerLink="/auth/register" class="btn btn-accent btn-lg mt-6" style="margin-top: var(--space-6)">Create your account</a>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container flex justify-between items-center">
+    <div class="container flex justify-between items-center footer-row">
       <div class="brand">
-        <div class="logo-icon small">T</div>
-        <span class="brand-name">Tribe</span>
+        <div class="logo-icon small">B</div>
+        <span class="brand-name">Borough</span>
       </div>
-      <p class="text-secondary text-sm">&copy; {{ currentYear }} Tribe Community Platform. All rights reserved.</p>
+      <div class="footer-meta">
+        <p class="text-secondary text-sm">&copy; {{ currentYear }} Borough Community Platform. All rights reserved.</p>
+        <p class="text-primary-color font-semibold mt-1">
+          Developed by <a href="https://github.com/Sudhu2004/" target="_blank" class="developer-link">Sudharshan Reddy</a>
+        </p>
+      </div>
     </div>
   </footer>
 </div>

@@ -38,7 +38,7 @@ export class CommunityList implements OnInit {
 
   ngOnInit() {
     this.breadcrumbService.setBreadcrumbs([
-      { label: 'Tribe', url: '/app/communities' }
+      { label: 'Borough', url: '/app/communities' }
     ]);
     this.loadCommunities();
   }

@@ -115,7 +115,7 @@ export class GroupDetail implements OnInit {
         this.loadMembers(code); // Always load members to have accurate counts and pending requests
 
         this.breadcrumbService.setBreadcrumbs([
-          { label: 'Tribe', url: '/app/communities' },
+          { label: 'Borough', url: '/app/communities' },
           { label: group.communityName || 'Community', url: `/app/communities/${group.communityCode}` },
           { label: group.name, url: `/app/groups/${code}` }
         ]);
